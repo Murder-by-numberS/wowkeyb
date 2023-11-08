@@ -20,6 +20,7 @@ phases:
         - mv server.js dist
         - mv package.json dist
         - cd dist
+        - python --version
         - npm install
         - ls -l
 artifacts:
