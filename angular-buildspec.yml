@@ -15,16 +15,17 @@ phases:
         - ls -l
         - npm install
         - npm install -g @angular/cli
+        - ls -l
   build:
     commands:
         - echo Build started 
         - ng build
-        - mv server.js dist
-        - mv package.json dist
+        - cp server.js dist
+        - cp node_modules dist
         - cd dist
         - python --version
-        - npm install
         - ls -l
+        - more server.js
 artifacts:
     files:
         - '**/*'
