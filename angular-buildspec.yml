@@ -5,8 +5,8 @@ env:
         CACHE_CONTROL: "86400"
         BUILD_FOLDER: "dist"
 phases:
-  install:
-    runtime-versions:
+    install:
+        runtime-versions:
         nodejs: 18
     commands:
         - echo Installing source NPM dependencies...
@@ -16,16 +16,18 @@ phases:
         - npm install
         - npm install -g @angular/cli
         - ls -l
-  build:
-    commands:
-        - echo Build started 
-        - ng build
-        - cp server.js dist
-        - cp -R node_modules/ dist/node_modules
-        - cd dist
-        - python --version
-        - ls -l
-        - more server.js
+    build:
+        commands:
+            - echo Build started 
+            - ng build
+            # - cp -R node_modules/ dist/node_modules
+            # - cd dist
+            # - ls -l
+            # - more server.js
+    post-build:
+        commands:
+            - cp -R node_modules/ dist/node_modules
+            - ls -l
 artifacts:
     files:
         - '**/*'
