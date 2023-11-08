@@ -24,7 +24,7 @@ phases:
             # - cd dist
             # - ls -l
             # - more server.js
-    post-build:
+    post_build:
         commands:
             - cp -R node_modules/ dist/node_modules
             - ls -l
