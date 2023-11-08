@@ -8,14 +8,14 @@ phases:
     install:
         runtime-versions:
             nodejs: 18
-    commands:
-        - echo Installing source NPM dependencies...
-        - npm config set legacy-peer-deps true
-        - pwd
-        - ls -l
-        - npm install
-        - npm install -g @angular/cli
-        - ls -l
+        commands:
+            - echo Installing source NPM dependencies...
+            - npm config set legacy-peer-deps true
+            - pwd
+            - ls -l
+            - npm install
+            - npm install -g @angular/cli
+            - ls -l
     build:
         commands:
             - echo Build started 
