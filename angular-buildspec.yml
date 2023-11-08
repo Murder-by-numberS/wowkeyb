@@ -11,25 +11,15 @@ phases:
         commands:
             - echo Installing source NPM dependencies...
             - npm config set legacy-peer-deps true
-            - pwd
-            - ls -l
             - npm install
             - npm install -g @angular/cli
-            - ls -l
     build:
         commands:
             - echo Build started 
             - ng build
-            # - cp -R node_modules/ dist/node_modules
-            # - cd dist
-            # - ls -l
-            # - more server.js
     post_build:
         commands:
             - cp -R node_modules/ dist/node_modules
-            - ls -l
 artifacts:
     files:
         - '**/*'
-    # base-directory: 'dist*'
-    # discard-paths: yes
