@@ -11,6 +11,8 @@ phases:
     commands:
         - echo Installing source NPM dependencies...
         - npm config set legacy-peer-deps true
+        - pwd
+        - ls -l
         - npm install
         - npm install -g @angular/cli
   build:
