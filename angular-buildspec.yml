@@ -18,6 +18,8 @@ phases:
         - echo Build started 
         - ng build
         - mv server.js dist
+        - cd dist
+        - npm install
 artifacts:
     files:
         - '**/*'
