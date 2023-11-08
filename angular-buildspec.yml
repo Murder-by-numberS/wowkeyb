@@ -20,6 +20,7 @@ phases:
         - mv server.js dist
         - cd dist
         - npm install
+        - ls -l
 artifacts:
     files:
         - '**/*'
