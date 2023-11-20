@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+import { AuthService } from './core/auth/auth.service';
 @Component({
     selector   : 'app-root',
     templateUrl: './app.component.html',
@@ -8,12 +9,29 @@ import { RouterOutlet } from '@angular/router';
     standalone : true,
     imports    : [RouterOutlet],
 })
-export class AppComponent
+export class AppComponent implements OnInit
 {
     /**
      * Constructor
      */
-    constructor()
+    constructor(private authService: AuthService)
     {
     }
+
+    ngOnInit(): void {
+        console.log('app init');
+
+        try {
+            this.authService.initializeBackendURL().subscribe((backend) => {
+                console.log('backend', backend);
+                // console.log('auth-service - this.apiUrl', this.apiUrl);
+                sessionStorage.setItem('backend_url', backend.url);
+                //set auth service
+                this.authService.setBackendURL();
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
 }

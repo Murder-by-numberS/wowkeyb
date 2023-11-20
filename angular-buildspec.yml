@@ -15,7 +15,7 @@ phases:
             - npm install -g @angular/cli
     build:
         commands:
-            - echo Build started 
+            - echo Build started for ${CURRENT_ENVIRONMENT}
             - ng build
     post_build:
         commands:

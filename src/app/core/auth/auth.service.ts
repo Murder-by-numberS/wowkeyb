@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-
+import { environment } from 'environments/environment';
 @Injectable({providedIn: 'root'})
 export class AuthService
 {
     private _authenticated: boolean = false;
-
+    private apiUrl: string;
     /**
      * Constructor
      */
@@ -192,4 +192,32 @@ export class AuthService
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
     }
+
+    setBackendURL(): void {
+        if (environment.production === true) {
+            this.apiUrl = sessionStorage.getItem('backend_url');
+        } else {
+            this.apiUrl = environment.apiUrl;
+        }
+    }
+
+    getBackendURL(): string {
+        return this.apiUrl;
+    }
+
+    initializeBackendURL(): Observable<any> {
+        console.log('initializing backend');
+        if (environment.production === true) {
+            console.log(
+                'getting backend URL',
+                `${window.location.origin}/backend`
+            );
+            return this._httpClient.get(`${window.location.origin}/backend`);
+        } else {
+            console.log('production env', environment.production);
+
+            return of(true);
+        }
+    }
+
 }
