@@ -2,20 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { AuthService } from './core/auth/auth.service';
+import { BackendService } from './core/services/backend.service';
 @Component({
-    selector   : 'app-root',
+    selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls  : ['./app.component.scss'],
-    standalone : true,
-    imports    : [RouterOutlet],
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [RouterOutlet],
 })
-export class AppComponent implements OnInit
-{
+export class AppComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(private authService: AuthService)
-    {
+    constructor(private authService: AuthService, public _backendService: BackendService) {
     }
 
     ngOnInit(): void {
@@ -32,6 +31,18 @@ export class AppComponent implements OnInit
         } catch (e) {
             console.error(e);
         }
+
+        this.backendHealthChecker();
+
     }
+
+    backendHealthChecker() {
+
+        this._backendService
+            .health()
+            .subscribe((health) => {
+                console.log('health', health);
+            })
+    };
 
 }
