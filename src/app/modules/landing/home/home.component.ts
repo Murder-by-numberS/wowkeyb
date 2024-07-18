@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -10,19 +10,9 @@ import { RouterLink } from '@angular/router';
     standalone: true,
     imports: [MatButtonModule, RouterLink, MatIconModule],
 })
-export class LandingHomeComponent implements OnInit {
+export class LandingHomeComponent {
     /**
      * Constructor
      */
-    constructor() {
-
-        console.log('on the landing page');
-    }
-
-    ngOnInit(): void {
-        console.log('calling backend');
-        //old
-
-    }
-
+    constructor() {}
 }
