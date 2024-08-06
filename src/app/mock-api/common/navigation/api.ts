@@ -73,6 +73,9 @@ export class NavigationMockApi {
                 });
             });
 
+            console.log('horizontal: cloneDeep(this._horizontalNavigation),', { horizontal: cloneDeep(this._horizontalNavigation) })
+            console.log('default: cloneDeep(this._defaultNavigation),,', { default: cloneDeep(this._defaultNavigation), })
+
             // Return the response
             return [
                 200,

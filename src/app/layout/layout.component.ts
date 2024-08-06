@@ -65,7 +65,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         private _fuseConfigService: FuseConfigService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fusePlatformService: FusePlatformService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -118,6 +118,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         this._fuseConfigService.config$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((config: FuseConfig) => {
+
                 // Store the config
                 this.config = config;
 

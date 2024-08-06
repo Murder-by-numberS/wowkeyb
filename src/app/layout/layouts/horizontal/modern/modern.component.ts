@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { FuseFullscreenComponent } from '@fuse/components/fullscreen';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
@@ -20,7 +21,7 @@ import { SearchComponent } from 'app/layout/common/search/search.component';
 import { ShortcutsComponent } from 'app/layout/common/shortcuts/shortcuts.component';
 import { UserComponent } from 'app/layout/common/user/user.component';
 import { Subject, takeUntil } from 'rxjs';
-
+import { AuthService } from 'app/core/auth/auth.service';
 @Component({
     selector: 'modern-layout',
     templateUrl: './modern.component.html',
@@ -32,6 +33,7 @@ import { Subject, takeUntil } from 'rxjs';
         FuseHorizontalNavigationComponent,
         MatButtonModule,
         MatIconModule,
+        RouterModule,
         LanguagesComponent,
         FuseFullscreenComponent,
         SearchComponent,
@@ -46,6 +48,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ModernLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;
     navigation: Navigation;
+    isAuthenticated: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -54,10 +57,11 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
+        private _authService: AuthService,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -78,6 +82,12 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+
+        this._navigationService.get()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((navigation) => {
+            })
+
         // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -92,6 +102,13 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
+
+        this._authService.check()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((authenticated) => {
+                this.isAuthenticated = authenticated;
+            })
+
     }
 
     /**
@@ -113,6 +130,7 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
      * @param name
      */
     toggleNavigation(name: string): void {
+
         // Get the navigation
         const navigation =
             this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
@@ -123,5 +141,9 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
             // Toggle the opened status
             navigation.toggle();
         }
+    }
+
+    goToLogin(): void {
+        this._router.navigate(['/sign-in']);
     }
 }

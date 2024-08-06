@@ -38,7 +38,7 @@ export class SettingsSecurityComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(private _formBuilder: UntypedFormBuilder) {}
+    constructor(private _formBuilder: UntypedFormBuilder) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -52,8 +52,8 @@ export class SettingsSecurityComponent implements OnInit {
         this.securityForm = this._formBuilder.group({
             currentPassword: [''],
             newPassword: [''],
-            twoStep: [true],
-            askPasswordChange: [false],
+            // twoStep: [true],
+            // askPasswordChange: [false],
         });
     }
 }

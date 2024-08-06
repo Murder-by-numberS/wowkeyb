@@ -51,7 +51,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -68,35 +68,31 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:user-circle',
                 title: 'Account',
                 description:
-                    'Manage your public profile and private information',
+                    'Manage your profile',
             },
             {
                 id: 'security',
                 icon: 'heroicons_outline:lock-closed',
                 title: 'Security',
                 description:
-                    'Manage your password and 2-step verification preferences',
+                    'Manage your password',
+                // description:
+
+                //     'Manage your password and 2-step verification preferences',
             },
-            {
-                id: 'plan-billing',
-                icon: 'heroicons_outline:credit-card',
-                title: 'Plan & Billing',
-                description:
-                    'Manage your subscription plan, payment method and billing information',
-            },
-            {
-                id: 'notifications',
-                icon: 'heroicons_outline:bell',
-                title: 'Notifications',
-                description: "Manage when you'll be notified on which channels",
-            },
-            {
-                id: 'team',
-                icon: 'heroicons_outline:user-group',
-                title: 'Team',
-                description:
-                    'Manage your existing team and change roles/permissions',
-            },
+            // {
+            //     id: 'notifications',
+            //     icon: 'heroicons_outline:bell',
+            //     title: 'Notifications',
+            //     description: "Manage when you'll be notified on which channels",
+            // },
+            // {
+            //     id: 'team',
+            //     icon: 'heroicons_outline:user-group',
+            //     title: 'Team',
+            //     description:
+            //         'Manage your existing team and change roles/permissions',
+            // },
         ];
 
         // Subscribe to media changes
