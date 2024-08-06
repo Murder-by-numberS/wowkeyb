@@ -139,6 +139,9 @@
                         "staging": {
                             "buildTarget": "fuse:build:staging"
                         },
+                        "develop": {
+                            "buildTarget": "fuse:build:develop"
+                        },
                         "development": {
                             "buildTarget": "fuse:build:development"
                         }
