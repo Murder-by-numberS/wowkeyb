@@ -16,7 +16,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
+import { FuseConfigService, FuseConfig, Scheme } from '@fuse/services/config';
+
+import { Subject, takeUntil } from 'rxjs';
+
 import { AuthService } from 'app/core/auth/auth.service';
+import { BackendService } from 'app/core/services/backend.service';
 
 @Component({
     selector: 'auth-sign-in',
@@ -46,7 +51,10 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    config: FuseConfig;
+    scheme: 'dark' | 'light';
 
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     /**
      * Constructor
      */
@@ -54,8 +62,10 @@ export class AuthSignInComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
+        private _backendService: BackendService,
+        private _fuseConfigService: FuseConfigService,
         private _router: Router
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -68,12 +78,21 @@ export class AuthSignInComponent implements OnInit {
         // Create the form
         this.signInForm = this._formBuilder.group({
             email: [
-                'hughes.brian@company.com',
+                '',
                 [Validators.required, Validators.email],
             ],
-            password: ['admin', Validators.required],
+            password: ['', Validators.required],
             rememberMe: [''],
         });
+
+        // Subscribe to config changes
+        this._fuseConfigService.config$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config: FuseConfig) => {
+                // Store the config
+                this.config = config;
+            });
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -97,7 +116,9 @@ export class AuthSignInComponent implements OnInit {
 
         // Sign in
         this._authService.signIn(this.signInForm.value).subscribe(
-            () => {
+            (response) => {
+                this.setScheme(response.userSettings.scheme);
+                this._backendService.startPing();
                 // Set the redirect url.
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via
@@ -111,6 +132,11 @@ export class AuthSignInComponent implements OnInit {
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
+
+                console.log('sign-in - response', response);
+
+                const errorMessage = response.error.error ? response.error.error[0].msg : response.error.message;
+
                 // Re-enable the form
                 this.signInForm.enable();
 
@@ -120,12 +146,21 @@ export class AuthSignInComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: errorMessage,
                 };
 
                 // Show the alert
                 this.showAlert = true;
             }
         );
+    }
+
+    /**
+ * Set the scheme on the config
+ *
+ * @param scheme
+ */
+    setScheme(scheme: Scheme): void {
+        this._fuseConfigService.config = { scheme };
     }
 }

@@ -13,53 +13,36 @@
             <div class="sm:col-span-4">
                 <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                     <mat-label>Current password</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:key'"
-                        matPrefix
-                    ></mat-icon>
-                    <input
-                        [formControlName]="'currentPassword'"
-                        type="password"
-                        matInput
-                    />
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'currentPassword'" type="password" matInput />
                 </mat-form-field>
             </div>
             <!-- New password -->
             <div class="sm:col-span-4">
                 <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                     <mat-label>New password</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:key'"
-                        matPrefix
-                    ></mat-icon>
-                    <input
-                        [formControlName]="'newPassword'"
-                        type="password"
-                        matInput
-                    />
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'newPassword'" type="password" matInput />
                 </mat-form-field>
                 <div class="text-hint mt-1 text-md">
-                    Minimum 8 characters. Must include numbers, letters and
-                    special characters.
+                    Password must contain 10 characters, 1 lowercase, 1 uppercase, 1 numeric and 1 special character.
                 </div>
             </div>
         </div>
 
         <!-- Divider -->
-        <div class="my-10 border-t"></div>
+        <!-- <div class="my-10 border-t"></div> -->
 
         <!-- Section -->
-        <div class="w-full">
+        <!-- <div class="w-full">
             <div class="text-xl">Security preferences</div>
             <div class="text-secondary">
                 Keep your account more secure with following preferences.
             </div>
         </div>
-        <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
-            <!-- 2-step auth -->
-            <div class="flex items-center justify-between sm:col-span-4">
+        <div class="mt-8 grid w-full gap-6 sm:grid-cols-4"> -->
+        <!-- 2-step auth -->
+        <!-- <div class="flex items-center justify-between sm:col-span-4">
                 <div
                     class="flex-auto cursor-pointer"
                     (click)="twoStepToggle.toggle()"
@@ -79,9 +62,9 @@
                     #twoStepToggle
                 >
                 </mat-slide-toggle>
-            </div>
-            <!-- Ask to change password -->
-            <div class="flex items-center justify-between sm:col-span-4">
+            </div> -->
+        <!-- Ask to change password -->
+        <!-- <div class="flex items-center justify-between sm:col-span-4">
                 <div
                     class="flex-auto cursor-pointer"
                     (click)="askPasswordChangeToggle.toggle()"
@@ -102,7 +85,7 @@
                 >
                 </mat-slide-toggle>
             </div>
-        </div>
+        </div> -->
 
         <!-- Divider -->
         <div class="my-10 border-t"></div>
@@ -110,12 +93,7 @@
         <!-- Actions -->
         <div class="flex items-center justify-end">
             <button mat-stroked-button type="button">Cancel</button>
-            <button
-                class="ml-4"
-                mat-flat-button
-                type="button"
-                [color]="'primary'"
-            >
+            <button class="ml-4" mat-flat-button type="button" [color]="'primary'">
                 Save
             </button>
         </div>

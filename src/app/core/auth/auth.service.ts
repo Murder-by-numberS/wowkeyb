@@ -1,14 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private apiUrl: string;
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -25,6 +29,14 @@ export class AuthService {
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    set currentUser(user: string) {
+        localStorage.setItem('currentUser', user);
+    }
+
+    get currentUser(): string {
+        return localStorage.getItem('currentUser') ?? '';
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -35,16 +47,16 @@ export class AuthService {
      * @param email
      */
     forgotPassword(email: string): Observable<any> {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post(`${this.apiUrl}/auth/forgot-password`, { email });
     }
 
     /**
      * Reset password
      *
-     * @param password
+     * @param passwordPayload
      */
-    resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+    resetPassword(passwordPayload: any): Observable<any> {
+        return this._httpClient.put(`${this.apiUrl}/auth/reset-password`, passwordPayload);
     }
 
     /**
@@ -58,15 +70,19 @@ export class AuthService {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        return this._httpClient.post(`${this.apiUrl}/auth/login`, credentials).pipe(
             switchMap((response: any) => {
+
+                console.log('AuthService - response', response);
+
                 // Store the access token in the local storage
-                this.accessToken = response.accessToken;
+                this.accessToken = response.token;
+                this.currentUser = JSON.stringify(response.user);
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
-                // Store the user on the user service
+                // // Store the user on the user service
                 this._userService.user = response.user;
 
                 // Return a new observable with the response
@@ -79,9 +95,10 @@ export class AuthService {
      * Sign in using the access token
      */
     signInUsingToken(): Observable<any> {
+
         // Sign in using the token
         return this._httpClient
-            .post('api/auth/sign-in-with-token', {
+            .post(`${this.apiUrl}/auth/refresh-access-token`, {
                 accessToken: this.accessToken,
             })
             .pipe(
@@ -90,16 +107,8 @@ export class AuthService {
                     of(false)
                 ),
                 switchMap((response: any) => {
-                    // Replace the access token with the new one if it's available on
-                    // the response object.
-                    //
-                    // This is an added optional step for better security. Once you sign
-                    // in using the token, you should generate a new one on the server
-                    // side and attach it to the response object. Then the following
-                    // piece of code can replace the token with the refreshed one.
-                    if (response.accessToken) {
-                        this.accessToken = response.accessToken;
-                    }
+                    // Store the access token in the local storage
+                    this.accessToken = response.token;
 
                     // Set the authenticated flag to true
                     this._authenticated = true;
@@ -119,6 +128,7 @@ export class AuthService {
     signOut(): Observable<any> {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('currentUser');
 
         // Set the authenticated flag to false
         this._authenticated = false;
@@ -133,12 +143,20 @@ export class AuthService {
      * @param user
      */
     signUp(user: {
-        name: string;
+        username: string;
         email: string;
         password: string;
-        company: string;
     }): Observable<any> {
-        return this._httpClient.post('api/auth/sign-up', user);
+        return this._httpClient.post(`${this.apiUrl}/auth/register`, user);
+    }
+
+    /**
+     * Confirm
+     *
+     * @param confirmCode
+     */
+    confirmUser(confirmCode: string): Observable<any> {
+        return this._httpClient.post(`${this.apiUrl}/auth/confirm-user`, { confirmCode });
     }
 
     /**
@@ -174,5 +192,32 @@ export class AuthService {
 
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
+    }
+
+    setBackendURL(): void {
+        if (environment.production === true) {
+            this.apiUrl = sessionStorage.getItem('backend_url');
+        } else {
+            this.apiUrl = environment.apiUrl;
+        }
+    }
+
+    getBackendURL(): string {
+        return this.apiUrl;
+    }
+
+    initializeBackendURL(): Observable<any> {
+        console.log('initializing backend');
+        if (environment.production === true) {
+            console.log(
+                'getting backend URL',
+                `${window.location.origin}/backend`
+            );
+            return this._httpClient.get(`${window.location.origin}/backend`);
+        } else {
+            console.log('production env', environment.production);
+
+            return of(true);
+        }
     }
 }

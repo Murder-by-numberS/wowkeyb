@@ -4,7 +4,6 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const generatePalette = require(
     path.resolve(__dirname, 'src/@fuse/tailwind/utils/generate-palette')
 );
-
 /**
  * Custom palettes
  *

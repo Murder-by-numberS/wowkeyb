@@ -54,7 +54,7 @@ export class AuthSignUpComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -66,11 +66,10 @@ export class AuthSignUpComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-            name: ['', Validators.required],
+            username: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required],
-            company: [''],
-            agreements: ['', Validators.requiredTrue],
+            // agreements: ['', Validators.requiredTrue],
         });
     }
 
@@ -96,6 +95,9 @@ export class AuthSignUpComponent implements OnInit {
         // Sign up
         this._authService.signUp(this.signUpForm.value).subscribe(
             (response) => {
+
+                console.log('sending to confirmation page')
+
                 // Navigate to the confirmation required page
                 this._router.navigateByUrl('/confirmation-required');
             },

@@ -7,6 +7,7 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,8 +18,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
 import { AuthService } from 'app/core/auth/auth.service';
-import { finalize } from 'rxjs';
-
+import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
 @Component({
     selector: 'auth-reset-password',
     templateUrl: './reset-password.component.html',
@@ -39,7 +39,7 @@ import { finalize } from 'rxjs';
 })
 export class AuthResetPasswordComponent implements OnInit {
     @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
-
+    countdown: number = 1;
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -47,13 +47,22 @@ export class AuthResetPasswordComponent implements OnInit {
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
 
+    resetCode: string;
+    resetCodeValid: boolean = false;
+    checkedResetCode: boolean = false;
+
+    validPasswordReset: any;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder
-    ) {}
+        private _formBuilder: UntypedFormBuilder,
+        private _router: Router,
+        private route: ActivatedRoute,
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -63,6 +72,15 @@ export class AuthResetPasswordComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+
+        this.route.queryParams.subscribe((params) => {
+            this.resetCode = params.rc; // (+) converts string 'id' to a number
+
+            //TODO: delete
+            console.log('this.resetCode');
+            console.log(this.resetCode);
+        });
+
         // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
@@ -76,6 +94,12 @@ export class AuthResetPasswordComponent implements OnInit {
                 ),
             }
         );
+
+        //turn off alert
+        this.resetPasswordForm.valueChanges.subscribe(() => {
+            this.showAlert = false;
+        });
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -97,9 +121,14 @@ export class AuthResetPasswordComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
 
+        const passwordPayload = {
+            np: this.resetPasswordForm.get('password').value,
+            rc: this.resetCode,
+        };
+
         // Send the request to the server
         this._authService
-            .resetPassword(this.resetPasswordForm.get('password').value)
+            .resetPassword(passwordPayload)
             .pipe(
                 finalize(() => {
                     // Re-enable the form
@@ -117,15 +146,49 @@ export class AuthResetPasswordComponent implements OnInit {
                     // Set the alert
                     this.alert = {
                         type: 'success',
-                        message: 'Your password has been reset.',
+                        message: 'Your password has been reset. Redirecting...',
                     };
+
+                    // disable the form
+                    this.resetPasswordForm.disable();
+
+                    // Redirect after the countdown
+                    timer(1000, 1000)
+                        .pipe(
+                            finalize(() => {
+                                this._router.navigate(['sign-in']);
+                            }),
+                            takeWhile(() => this.countdown > 0),
+                            takeUntil(this._unsubscribeAll),
+                            tap(() => this.countdown--)
+                        )
+                        .subscribe();
+
                 },
                 (response) => {
+
+                    console.log('response', response);
+
                     // Set the alert
                     this.alert = {
                         type: 'error',
-                        message: 'Something went wrong, please try again.',
+                        message: response.error.error ? response.error.error[0].msg : response.error.message,
                     };
+
+                    //TODO: change to turn off alert for dirty input
+                    // Redirect after the countdown
+                    // timer(3000, 3000)
+                    //     .pipe(
+                    //         finalize(() => {
+
+                    //             this.showAlert = false;
+                    //         }),
+                    //         takeWhile(() => this.countdown > 0),
+                    //         takeUntil(this._unsubscribeAll),
+                    //         tap(() => this.countdown--)
+                    //     )
+                    //     .subscribe();
+
                 }
             );
     }

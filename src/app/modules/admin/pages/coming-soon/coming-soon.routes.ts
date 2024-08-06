@@ -13,7 +13,11 @@ export default [
         component: ComingSoonClassicComponent,
     },
     {
-        path: 'modern',
+        path: 'create',
+        component: ComingSoonModernComponent,
+    },
+    {
+        path: 'view',
         component: ComingSoonModernComponent,
     },
     {

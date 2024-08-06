@@ -25,7 +25,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
     constructor(
         private _authService: AuthService,
         private _router: Router
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -42,7 +42,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
         timer(1000, 1000)
             .pipe(
                 finalize(() => {
-                    this._router.navigate(['sign-in']);
+                    this._router.navigate(['home']);
                 }),
                 takeWhile(() => this.countdown > 0),
                 takeUntil(this._unsubscribeAll),
