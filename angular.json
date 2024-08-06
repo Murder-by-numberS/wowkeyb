@@ -136,6 +136,9 @@
                         "production": {
                             "buildTarget": "fuse:build:production"
                         },
+                        "staging": {
+                            "buildTarget": "fuse:build:staging"
+                        },
                         "development": {
                             "buildTarget": "fuse:build:development"
                         }
