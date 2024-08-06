@@ -20,7 +20,11 @@ export class BackendService {
     }
 
     getBackendURL(): void {
+        // if (environment.production === true) {
+        //     this.apiUrl = sessionStorage.getItem('backend_url');
+        // } else {
         this.apiUrl = environment.apiUrl;
+        // }
     }
 
     health(): Observable<any> {
