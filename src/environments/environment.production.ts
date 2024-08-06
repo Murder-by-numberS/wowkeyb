@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    envName: 'prod',
+    envName: 'production',
     apiUrl: 'https://wowkeyb.gg/',
     hmr: false,
 };
