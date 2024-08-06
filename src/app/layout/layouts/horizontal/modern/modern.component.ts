@@ -22,6 +22,9 @@ import { ShortcutsComponent } from 'app/layout/common/shortcuts/shortcuts.compon
 import { UserComponent } from 'app/layout/common/user/user.component';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
+
+import packageJson from '../../../../../../package.json'
+
 @Component({
     selector: 'modern-layout',
     templateUrl: './modern.component.html',
@@ -49,6 +52,9 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;
     navigation: Navigation;
     isAuthenticated: boolean;
+
+    version: string = packageJson.version;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
