@@ -72,6 +72,12 @@
                                     "maximumError": "90kb"
                                 }
                             ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.production.ts"
+                                }
+                            ],
                             "outputHashing": "all"
                         },
                         "staging": {
@@ -87,6 +93,12 @@
                                     "maximumError": "90kb"
                                 }
                             ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.staging.ts"
+                                }
+                            ],
                             "outputHashing": "all"
                         },
                         "develop": {
@@ -100,6 +112,12 @@
                                     "type": "anyComponentStyle",
                                     "maximumWarning": "75kb",
                                     "maximumError": "90kb"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.develop.ts"
                                 }
                             ],
                             "outputHashing": "all"
