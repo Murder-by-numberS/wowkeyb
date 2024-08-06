@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'environments/environment';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -20,6 +19,9 @@ export class BackendService {
     }
 
     getBackendURL(): void {
+
+        console.log('environment', environment);
+
         // if (environment.production === true) {
         //     this.apiUrl = sessionStorage.getItem('backend_url');
         // } else {
