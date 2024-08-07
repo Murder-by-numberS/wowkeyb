@@ -60,6 +60,15 @@ export class AuthService {
     }
 
     /**
+     * Change password
+     *
+     * @param passwordPayload
+     */
+    changePassword(passwordPayload: any): Observable<any> {
+        return this._httpClient.put(`${this.apiUrl}/auth/change-password`, passwordPayload);
+    }
+
+    /**
      * Sign in
      *
      * @param credentials

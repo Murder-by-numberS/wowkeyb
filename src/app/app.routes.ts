@@ -68,6 +68,32 @@ export const appRoutes: Route[] = [
             { path: 'home', loadChildren: () => import('app/modules/landing/home/home.routes') },
         ]
     },
+    // Maintenance
+    { path: 'maintenance', loadChildren: () => import('app/modules/admin/pages/maintenance/maintenance.routes') },
+
+    // Keybinds
+    {
+        path: '',
+        component: LayoutComponent,
+        data: {
+            layout: 'modern'
+        },
+        // Coming Soon
+        children: [{ path: 'keybinds', loadChildren: () => import('app/modules/keybinds/keybinds.routes') },
+        ]
+    },
+    // Macros
+    {
+        path: '',
+        component: LayoutComponent,
+        data: {
+            layout: 'modern'
+        },
+        // Coming Soon
+        children: [
+            { path: 'macros', loadChildren: () => import('app/modules/macros/macros.routes') },
+        ]
+    },
 
     // Admin routes
     {
@@ -110,15 +136,6 @@ export const appRoutes: Route[] = [
             {
                 path: 'pages', children: [
 
-                    // Coming Soon
-                    { path: 'keybinds', loadChildren: () => import('app/modules/admin/pages/coming-soon/coming-soon.routes') },
-
-                    // Coming Soon
-                    { path: 'macros', loadChildren: () => import('app/modules/admin/pages/coming-soon/coming-soon.routes') },
-
-                    // Activities
-                    { path: 'activities', loadChildren: () => import('app/modules/admin/pages/activities/activities.routes') },
-
                     // Authentication
                     { path: 'authentication', loadChildren: () => import('app/modules/admin/pages/authentication/authentication.routes') },
 
@@ -145,9 +162,6 @@ export const appRoutes: Route[] = [
                     //     ]
                     // },
 
-                    // Maintenance
-                    { path: 'maintenance', loadChildren: () => import('app/modules/admin/pages/maintenance/maintenance.routes') },
-
                     // Pricing
                     // {
                     //     path: 'pricing', children: [
@@ -169,65 +183,17 @@ export const appRoutes: Route[] = [
                 ]
             },
 
-            // User Interface
+            // // Documentation
             // {
-            //     path: 'ui', children: [
+            //     path: 'docs', children: [
 
-            //         // Material Components
-            //         { path: 'material-components', loadChildren: () => import('app/modules/admin/ui/material-components/material-components.routes') },
+            //         // Changelog
+            //         { path: 'changelog', loadChildren: () => import('app/modules/admin/docs/changelog/changelog.routes') },
 
-            //         // Fuse Components
-            //         { path: 'fuse-components', loadChildren: () => import('app/modules/admin/ui/fuse-components/fuse-components.routes') },
-
-            //         // Other Components
-            //         { path: 'other-components', loadChildren: () => import('app/modules/admin/ui/other-components/other-components.routes') },
-
-            //         // TailwindCSS
-            //         { path: 'tailwindcss', loadChildren: () => import('app/modules/admin/ui/tailwindcss/tailwindcss.routes') },
-
-            //         // Advanced Search
-            //         { path: 'advanced-search', loadChildren: () => import('app/modules/admin/ui/advanced-search/advanced-search.routes') },
-
-            //         // Animations
-            //         { path: 'animations', loadChildren: () => import('app/modules/admin/ui/animations/animations.routes') },
-
-            //         // Cards
-            //         { path: 'cards', loadChildren: () => import('app/modules/admin/ui/cards/cards.routes') },
-
-            //         // Colors
-            //         { path: 'colors', loadChildren: () => import('app/modules/admin/ui/colors/colors.routes') },
-
-            //         // Confirmation Dialog
-            //         { path: 'confirmation-dialog', loadChildren: () => import('app/modules/admin/ui/confirmation-dialog/confirmation-dialog.routes') },
-
-            //         // Datatable
-            //         { path: 'datatable', loadChildren: () => import('app/modules/admin/ui/datatable/datatable.routes') },
-
-            //         // Forms
-            //         { path: 'forms', loadChildren: () => import('app/modules/admin/ui/forms/forms.routes') },
-
-            //         // Icons
-            //         { path: 'icons', loadChildren: () => import('app/modules/admin/ui/icons/icons.routes') },
-
-            //         // Page Layouts
-            //         { path: 'page-layouts', loadChildren: () => import('app/modules/admin/ui/page-layouts/page-layouts.routes') },
-
-            //         // Typography
-            //         { path: 'typography', loadChildren: () => import('app/modules/admin/ui/typography/typography.routes') }
+            //         // Guides
+            //         { path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.routes') }
             //     ]
             // },
-
-            // Documentation
-            {
-                path: 'docs', children: [
-
-                    // Changelog
-                    { path: 'changelog', loadChildren: () => import('app/modules/admin/docs/changelog/changelog.routes') },
-
-                    // Guides
-                    { path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.routes') }
-                ]
-            },
 
             // 404 & Catch all
             { path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes') },

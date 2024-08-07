@@ -1,101 +1,122 @@
 <div class="w-full max-w-3xl">
-    <!-- Form -->
-    <form [formGroup]="securityForm">
-        <!-- Section -->
-        <div class="w-full">
-            <div class="text-xl">Change your password</div>
-            <div class="text-secondary">
-                You can only change your password twice within 24 hours!
-            </div>
-        </div>
-        <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
-            <!-- Current password -->
-            <div class="sm:col-span-4">
-                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>Current password</mat-label>
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
-                    <input [formControlName]="'currentPassword'" type="password" matInput />
-                </mat-form-field>
-            </div>
-            <!-- New password -->
-            <div class="sm:col-span-4">
-                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>New password</mat-label>
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
-                    <input [formControlName]="'newPassword'" type="password" matInput />
-                </mat-form-field>
-                <div class="text-hint mt-1 text-md">
-                    Password must contain 10 characters, 1 lowercase, 1 uppercase, 1 numeric and 1 special character.
-                </div>
-            </div>
-        </div>
 
-        <!-- Divider -->
-        <!-- <div class="my-10 border-t"></div> -->
+    <!-- Section -->
+    <div class="w-full">
+        <div class="text-xl">Change your password</div>
+    </div>
 
-        <!-- Section -->
-        <!-- <div class="w-full">
-            <div class="text-xl">Security preferences</div>
-            <div class="text-secondary">
-                Keep your account more secure with following preferences.
-            </div>
-        </div>
-        <div class="mt-8 grid w-full gap-6 sm:grid-cols-4"> -->
-        <!-- 2-step auth -->
-        <!-- <div class="flex items-center justify-between sm:col-span-4">
-                <div
-                    class="flex-auto cursor-pointer"
-                    (click)="twoStepToggle.toggle()"
-                >
-                    <div class="font-medium leading-6">
-                        Enable 2-step authentication
-                    </div>
-                    <div class="text-secondary text-md">
-                        Protects you against password theft by requesting an
-                        authentication code via SMS on every login.
-                    </div>
-                </div>
-                <mat-slide-toggle
-                    class="ml-4"
-                    [color]="'primary'"
-                    [formControlName]="'twoStep'"
-                    #twoStepToggle
-                >
-                </mat-slide-toggle>
-            </div> -->
-        <!-- Ask to change password -->
-        <!-- <div class="flex items-center justify-between sm:col-span-4">
-                <div
-                    class="flex-auto cursor-pointer"
-                    (click)="askPasswordChangeToggle.toggle()"
-                >
-                    <div class="font-medium leading-6">
-                        Ask to change password on every 6 months
-                    </div>
-                    <div class="text-secondary text-md">
-                        A simple but an effective way to be protected against
-                        data leaks and password theft.
-                    </div>
-                </div>
-                <mat-slide-toggle
-                    class="ml-4"
-                    [color]="'primary'"
-                    [formControlName]="'askPasswordChange'"
-                    #askPasswordChangeToggle
-                >
-                </mat-slide-toggle>
-            </div>
-        </div> -->
+    <!-- Alert -->
+    @if (showAlert) {
+    <fuse-alert class="mt-8" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
+        [@shake]="alert.type === 'error'">
+        {{ alert.message }}
+    </fuse-alert>
+    }
 
-        <!-- Divider -->
-        <div class="my-10 border-t"></div>
+    <!-- Sign in form -->
+    <form class="mt-8" [formGroup]="changePasswordForm" #changePasswordNgForm="ngForm">
+        <!-- Current Password field -->
+        <mat-form-field class="w-full">
+            <mat-label>Current Password</mat-label>
+            <input id="currentPassword" matInput type="password" [formControlName]="'currentPassword'"
+                #currentPasswordField />
+            <button mat-icon-button type="button" (click)="
+            currentPasswordField.type === 'password'
+                ? (currentPasswordField.type = 'text')
+                : (currentPasswordField.type = 'password')
+        " matSuffix>
+                @if (currentPasswordField.type === 'password') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                }
+                @if (currentPasswordField.type === 'text') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                }
+            </button>
+            @if (changePasswordForm.get('currentPassword').hasError('required')) {
+            <mat-error> Current Password is required </mat-error>
+            }
+        </mat-form-field>
 
-        <!-- Actions -->
+        <!-- New Password field -->
+        <mat-form-field class="w-full">
+            <mat-label>New Password</mat-label>
+            <input id="newPassword" matInput type="password" [formControlName]="'newPassword'" #newPasswordField />
+            <button mat-icon-button type="button" (click)="
+            newPasswordField.type === 'password'
+                ? (newPasswordField.type = 'text')
+                : (newPasswordField.type = 'password')
+        " matSuffix>
+                @if (newPasswordField.type === 'password') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                }
+                @if (newPasswordField.type === 'text') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                }
+            </button>
+            @if (changePasswordForm.get('newPassword').hasError('required')) {
+            <mat-error> New Password is required </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Verify New Password field -->
+        <mat-form-field class="w-full">
+            <mat-label>Verify New Password</mat-label>
+            <input id="verifyNewPassword" matInput type="password" [formControlName]="'verifyNewPassword'"
+                #verifyNewPasswordField />
+            <button mat-icon-button type="button" (click)="
+            verifyNewPasswordField.type === 'password'
+                                ? (verifyNewPasswordField.type = 'text')
+                                : (verifyNewPasswordField.type = 'password')
+                        " matSuffix>
+                @if (verifyNewPasswordField.type === 'password') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                }
+                @if (verifyNewPasswordField.type === 'text') {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                }
+            </button>
+            @if (changePasswordForm.get('verifyNewPassword').hasError('required')) {
+            <mat-error> Verify New Password is required </mat-error>
+            }
+            @if (
+            changePasswordForm
+            .get('verifyNewPassword')
+            .hasError('mustMatch')
+            ) {
+            <mat-error> Passwords must match </mat-error>
+            }
+        </mat-form-field>
         <div class="flex items-center justify-end">
-            <button mat-stroked-button type="button">Cancel</button>
-            <button class="ml-4" mat-flat-button type="button" [color]="'primary'">
-                Save
+            <!-- Submit button -->
+            <button class="fuse-mat-button-large mt-6" mat-flat-button [color]="'primary'"
+                [disabled]="changePasswordForm.disabled" (click)="changePassword()">
+                @if (!changePasswordForm.disabled) {
+                <span> Change Password </span>
+                }
+                @if (changePasswordForm.disabled) {
+                <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+                }
             </button>
         </div>
+        <!-- Separator -->
+        <!-- <div class="mt-8 flex items-center">
+            <div class="mt-px flex-auto border-t"></div>
+            <div class="text-secondary mx-2">Or continue with</div>
+            <div class="mt-px flex-auto border-t"></div>
+        </div> -->
+
+        <!-- Single sign-on buttons -->
+        <!-- <div class="mt-8 flex items-center space-x-4">
+            <button class="flex-auto" type="button" mat-stroked-button>
+                <mat-icon class="icon-size-5" [svgIcon]="'feather:facebook'"></mat-icon>
+            </button>
+            <button class="flex-auto" type="button" mat-stroked-button>
+                <mat-icon class="icon-size-5" [svgIcon]="'feather:twitter'"></mat-icon>
+            </button>
+            <button class="flex-auto" type="button" mat-stroked-button>
+                <mat-icon class="icon-size-5" [svgIcon]="'feather:github'"></mat-icon>
+            </button>
+        </div> -->
     </form>
+
 </div>
