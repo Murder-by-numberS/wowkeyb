@@ -11,6 +11,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Subject, takeUntil } from 'rxjs';
 import { SettingsAccountComponent } from './account/account.component';
@@ -18,6 +19,7 @@ import { SettingsNotificationsComponent } from './notifications/notifications.co
 import { SettingsPlanBillingComponent } from './plan-billing/plan-billing.component';
 import { SettingsSecurityComponent } from './security/security.component';
 import { SettingsTeamComponent } from './team/team.component';
+import { SettingsAppComponent } from './app-settings/app-settings.component';
 
 @Component({
     selector: 'settings',
@@ -29,12 +31,14 @@ import { SettingsTeamComponent } from './team/team.component';
         MatSidenavModule,
         MatButtonModule,
         MatIconModule,
+        MatSnackBarModule,
         NgClass,
         SettingsAccountComponent,
         SettingsSecurityComponent,
         SettingsPlanBillingComponent,
         SettingsNotificationsComponent,
         SettingsTeamComponent,
+        SettingsAppComponent,
     ],
 })
 export class SettingsComponent implements OnInit, OnDestroy {
@@ -93,6 +97,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
             //     description:
             //         'Manage your existing team and change roles/permissions',
             // },
+            {
+                id: 'app-settings',
+                icon: 'heroicons_outline:user-group',
+                title: 'App Settings',
+                description:
+                    'Manage your app settings',
+            },
         ];
 
         // Subscribe to media changes
