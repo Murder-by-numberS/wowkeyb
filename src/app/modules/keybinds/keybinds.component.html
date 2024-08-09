@@ -1,22 +1,63 @@
-<div class="flex h-full w-full flex-col items-center justify-center">
-    <div class="w-full max-w-3xl">
-        <div class="prose prose-sm mx-auto max-w-none">
-            <img class="w-20" src="images/logo/logo.svg" alt="Logo image" />
-            <h1>Keybinds Module</h1>
-            <p>
-                This can be the landing or the welcome page of your application.
-                If you have an SSR (Server Side Rendering) setup, or if you
-                don't need to have Search engine visibility and optimizations,
-                you can even use this page as your primary landing page.
-            </p>
-            <p>
-                This is a separate "module", it has its own directory and
-                routing setup and also it's completely separated from the actual
-                application. This is also a simple example of a multiple
-                applications setup that uses the same codebase. You can have
-                different entry points and essentially have different
-                applications within the same codebase.
-            </p>
+<div class="flex w-full flex-auto flex-col">
+
+    <mat-drawer-container class="h-full">
+
+        <mat-drawer #drawer class="h-full" mode="side" [(opened)]="opened">
+            <div class="flex flex-col p-6">
+                <div class="text-3xl font-semibold leading-8 tracking-tight">
+                    List of Keybindings
+                </div>
+            </div>
+            <div class="flex flex-col">
+                Filter
+            </div>
+            <div class="flex flex-col">
+                <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
+                    <span class="ml-2">Create New Keybinding</span>
+                </button>
+            </div>
+        </mat-drawer>
+        <div class="mx-auto flex w-full flex-wrap">
+            <div class="flex w-full items-center py-4 ml-6">
+                <div class="text-3xl font-semibold leading-8 tracking-tight">
+                    Keybindings
+                </div>
+            </div>
+
+            <div class="flex w-full justify-between mx-4">
+                <div class="flex">
+                    <button class="hidden sm:inline-flex" mat-stroked-button (click)="drawer.toggle()">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
+                        <span class="ml-2">Toggle sidenav</span>
+                    </button>
+                </div>
+                <div class="ml-6 flex">
+
+                    <button class="hidden sm:inline-flex" mat-stroked-button>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
+                        <span class="ml-2">Save</span>
+                    </button>
+                    <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
+                        <span class="ml-2">Share</span>
+                    </button>
+
+                    <!-- Actions menu (visible on xs) -->
+                    <div class="sm:hidden">
+                        <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                            <mat-icon [svgIcon]="'heroicons_outline:ellipsis-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #actionsMenu="matMenu">
+                            <button mat-menu-item>Save</button>
+                            <button mat-menu-item>Share</button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="flex h-full w-full">
+            Content
+        </div>
+    </mat-drawer-container>
 </div>
