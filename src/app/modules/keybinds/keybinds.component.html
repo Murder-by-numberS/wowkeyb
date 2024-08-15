@@ -2,47 +2,11 @@
 
     <mat-drawer-container class="h-full">
 
-        <mat-drawer #drawer class="h-full" mode="side" [(opened)]="opened">
-            <!-- <div class="flex flex-col">
-                <div class="flex p-6">
-                    <div class="text-3xl font-semibold leading-8 tracking-tight">
-                        List of Keybindings
-                    </div>
-                </div>
-                <div class="flex">
-                    Filter
-                </div>
-                <div class="flex">
-                    <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'">
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
-                        <span class="ml-2">Create New Keybinding</span>
-                    </button>
-                </div>
-            </div> -->
-            <div class="flex flex-col h-full">
-                <!-- Row 1 -->
-                <div class="flex-1 max-h-12 flex items-center justify-center">
-                    <div class="text-3xl font-semibold leading-8 tracking-tight">
-                        List of Keybindings
-                    </div>
-                </div>
-
-                <!-- Row 2 -->
-                <div class="flex-1 max-h-12 flex items-center justify-center">
-                    Filter
-                </div>
-
-                <!-- Row 3 -->
-                <div class="flex-1 max-h-12 flex items-center justify-center">
-                    <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'">
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
-                        <span class="ml-2">Create New Keybinding</span>
-                    </button>
-                </div>
-            </div>
+        <mat-drawer #drawer class="h-full w-64" mode="side" [(opened)]="opened">
+            <keybinds-drawer></keybinds-drawer>
         </mat-drawer>
-        <div class="mx-auto flex w-full flex-wrap">
-            <div class="flex w-full items-center py-4 ml-6">
+        <div class="mx-auto flex w-full flex-wrap pb-4">
+            <div class="flex w-full items-center py-2 ml-6">
                 <div class="text-3xl font-semibold leading-8 tracking-tight">
                     Keybindings
                 </div>
@@ -54,6 +18,9 @@
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
                         <span class="ml-2">Toggle sidenav</span>
                     </button>
+                    <div class="flex items-center">
+                        Viewing: Keybinding Name
+                    </div>
                 </div>
                 <div class="ml-6 flex">
 
@@ -79,118 +46,9 @@
                 </div>
             </div>
         </div>
-        <div class="flex h-full w-full">
-            <div class="flex justify-center items-center h-screen">
-                <div class="keyboard p-5 rounded-lg shadow-lg">
-                    <!-- Function Row -->
-                    <div class="flex space-x-1 mb-1">
-                        <div class="key w-12">Esc</div>
-                        <div class="flex space-x-1">
-                            <div class="key w-12">F1</div>
-                            <div class="key w-12">F2</div>
-                            <div class="key w-12">F3</div>
-                            <div class="key w-12">F4</div>
-                        </div>
-                        <div class="flex space-x-1">
-                            <div class="key w-12">F5</div>
-                            <div class="key w-12">F6</div>
-                            <div class="key w-12">F7</div>
-                            <div class="key w-12">F8</div>
-                        </div>
-                        <div class="flex space-x-1">
-                            <div class="key w-12">F9</div>
-                            <div class="key w-12">F10</div>
-                            <div class="key w-12">F11</div>
-                            <div class="key w-12">F12</div>
-                        </div>
-                    </div>
-
-                    <!-- Number Row -->
-                    <div class="flex space-x-1 mb-1">
-                        <div class="key w-12">~</div>
-                        <div class="key w-12">1</div>
-                        <div class="key w-12">2</div>
-                        <div class="key w-12">3</div>
-                        <div class="key w-12">4</div>
-                        <div class="key w-12">5</div>
-                        <div class="key w-12">6</div>
-                        <div class="key w-12">7</div>
-                        <div class="key w-12">8</div>
-                        <div class="key w-12">9</div>
-                        <div class="key w-12">0</div>
-                        <div class="key w-12">-</div>
-                        <div class="key w-12">=</div>
-                        <div class="key w-24">Backspace</div>
-                    </div>
-
-                    <!-- QWERTY Row -->
-                    <div class="flex space-x-1 mb-1">
-                        <div class="key w-16">Tab</div>
-                        <div class="key w-12">Q</div>
-                        <div class="key w-12">W</div>
-                        <div class="key w-12">E</div>
-                        <div class="key w-12">R</div>
-                        <div class="key w-12">T</div>
-                        <div class="key w-12">Y</div>
-                        <div class="key w-12">U</div>
-                        <div class="key w-12">I</div>
-                        <div class="key w-12">O</div>
-                        <div class="key w-12">P</div>
-                        <div class="key w-12">[</div>
-                        <div class="key w-12">]</div>
-                        <div class="key w-16">|\</div>
-                    </div>
-
-                    <!-- ASDF Row -->
-                    <div class="flex space-x-1 mb-1">
-                        <div class="key w-20">Caps Lock</div>
-                        <div class="key w-12">A</div>
-                        <div class="key w-12">S</div>
-                        <div class="key w-12">D</div>
-                        <div class="key w-12">F</div>
-                        <div class="key w-12">G</div>
-                        <div class="key w-12">H</div>
-                        <div class="key w-12">J</div>
-                        <div class="key w-12">K</div>
-                        <div class="key w-12">L</div>
-                        <div class="key w-12">;</div>
-                        <div class="key w-12">'</div>
-                        <div class="key w-24">Enter</div>
-                    </div>
-
-                    <!-- ZXCV Row -->
-                    <div class="flex space-x-1 mb-1">
-                        <div class="key w-24">Shift</div>
-                        <div class="key w-12">Z</div>
-                        <div class="key w-12">X</div>
-                        <div class="key w-12">C</div>
-                        <div class="key w-12">V</div>
-                        <div class="key w-12">B</div>
-                        <div class="key w-12">N</div>
-                        <div class="key w-12">M</div>
-                        <div class="key w-12">,</div>
-                        <div class="key w-12">.</div>
-                        <div class="key w-12">/</div>
-                        <div class="key w-32">Shift</div>
-                    </div>
-
-                    <!-- Bottom Row -->
-                    <div class="flex space-x-1">
-                        <div class="key w-16">Ctrl</div>
-                        <div class="key w-16">Fn</div>
-                        <div class="key w-16">Alt</div>
-                        <div class="key w-64">Space</div>
-                        <div class="key w-16">Alt</div>
-                        <div class="key w-16">Ctrl</div>
-                        <div class="key w-16">◄</div>
-                        <div class="flex flex-col space-y-1">
-                            <div class="key w-16">▲</div>
-                            <div class="key w-16">▼</div>
-                        </div>
-                        <div class="key w-16">►</div>
-                    </div>
-                </div>
-            </div>
+        <div class="flex w-full bg-gray-300 max-h-26 min-h-20">
+            <abilities></abilities>
         </div>
+        <keyboard></keyboard>
     </mat-drawer-container>
 </div>

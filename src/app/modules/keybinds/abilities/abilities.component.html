@@ -1,0 +1,15 @@
+<div class="p-2 flex flex-row">
+    <div class="flex-col px-4">
+        <mat-form-field appearance="fill" class="w-48">
+            <mat-label>Select a class</mat-label>
+            <mat-select [(value)]="selectedClass">
+                @for (class of classes; track class) {
+                <mat-option [value]="class.name">{{class.name}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        Abilities
+    </div>
+</div>
