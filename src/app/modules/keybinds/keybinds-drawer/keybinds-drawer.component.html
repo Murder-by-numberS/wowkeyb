@@ -1,6 +1,6 @@
 <div class="flex flex-col h-full text-nowrap">
     <!-- Row 1 -->
-    <div class="flex-0 max-h-12 min-h-6 items-center justify-center px-4 pt-4">
+    <div class="flex-0 max-h-14 min-h-6 items-center justify-center p-4">
         <div class="text-3xl font-semibold leading-8 tracking-tight">
             Keybindings List
         </div>
@@ -53,23 +53,21 @@
     </div>
 
     <!-- Row -->
-    @for (keybind of keybindings; track keybind) {
+    @for (keybinding of keybindings; track keybinding) {
     <div [ngClass]="{
-        'bg-blue-500 text-white': isSelected(keybind.keybind_id),
-        'bg-gray-200 text-black': !isSelected(keybind.keybind_id)
-      }" class="flex flex-0 max-h-16 min-h-12 items-center px-4 cursor-pointer"
-        (click)="selectKeybind(keybind.keybind_id)">
-        <p>{{keybind.name}}</p>
+        'bg-blue-500 text-white': isSelected(keybinding.id),
+        'bg-gray-200 text-black': !isSelected(keybinding.id)
+      }" class="flex flex-0 max-h-16 min-h-12 items-center px-4 cursor-pointer" (click)="selectKeybinding(keybinding)">
+        <p>{{keybinding.name}} - {{keybinding.class}}</p>
     </div>
     }
 
     <!-- Last Row until max 100 has reached -->
-    @if (keybindings.length !== MAX_SIZE) {
-    <div class="flex-0 max-h-12 min-h-6 items-center justify-center">
+    @if (keybindings.length < MAX_SIZE) { <div class="flex flex-0 max-h-16 min-h-12 items-center justify-center">
         <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="createKeybinding()">
-            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
-            <span class="ml-2">Create New Keybinding</span>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon>
+            <span class="ml-2">Create Keybinding</span>
         </button>
-    </div>
-    }
+</div>
+}
 </div>

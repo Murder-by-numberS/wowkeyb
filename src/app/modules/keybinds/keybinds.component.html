@@ -3,7 +3,7 @@
     <mat-drawer-container class="h-full">
 
         <mat-drawer #drawer class="h-full w-64" mode="side" [(opened)]="opened">
-            <keybinds-drawer></keybinds-drawer>
+            <keybinds-drawer (keybindingSelected)="onKeybindingSelected($event)"></keybinds-drawer>
         </mat-drawer>
         <div class="mx-auto flex w-full flex-wrap pb-4">
             <div class="flex w-full items-center py-2 ml-6">
@@ -16,19 +16,34 @@
                 <div class="flex">
                     <button class="hidden sm:inline-flex" mat-stroked-button (click)="drawer.toggle()">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
-                        <span class="ml-2">Toggle sidenav</span>
+                        <span class="ml-2">Show List</span>
                     </button>
+                    @if (selectedKeybinding) {
                     <div class="flex items-center">
-                        Viewing: Keybinding Name
+                        Viewing: {{selectedKeybinding.name}}
                     </div>
+                    }
+                    <!-- @if (!selectedKeybind) {
+                    <div class="flex items-center">
+                        Viewing: New
+                    </div>
+                    } -->
+
                 </div>
                 <div class="ml-6 flex">
 
-                    <button class="hidden sm:inline-flex" mat-stroked-button>
+                    <button class="hidden sm:inline-flex" mat-stroked-button [disabled]="!keybindingSelected"
+                        (click)="deleteKeybinding()">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
+                        <span class="ml-2">Delete</span>
+                    </button>
+                    <button class="ml-3 hidden sm:inline-flex" mat-stroked-button [disabled]="!keybindingSelected"
+                        (click)="saveKeybinding()">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
                         <span class="ml-2">Save</span>
                     </button>
-                    <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'">
+                    <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'"
+                        [disabled]="!keybindingSelected" (click)="shareKeybinding()">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:arrow-up-tray'"></mat-icon>
                         <span class="ml-2">Share</span>
                     </button>
@@ -46,8 +61,9 @@
                 </div>
             </div>
         </div>
-        <div class="flex w-full bg-gray-300 max-h-26 min-h-20">
-            <abilities></abilities>
+        <div class="flex w-full bg-gray-300 max-h-24 min-h-20">
+            <abilities [keybindingSelected]="keybindingSelected" [selectedKeybinding]="selectedKeybinding">
+            </abilities>
         </div>
         <keyboard></keyboard>
     </mat-drawer-container>
