@@ -2,6 +2,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 //Angular Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,10 +26,16 @@ import { KeybindingService } from 'app/core/services/keybinding.service';
     standalone: true,
     imports: [
         RouterLink,
+
+        FormsModule,
+        ReactiveFormsModule,
+
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
         MatSidenavModule,
+        MatFormFieldModule,
+        MatInputModule,
 
         KeyboardComponent,
         AbilitiesComponent,
@@ -33,30 +43,41 @@ import { KeybindingService } from 'app/core/services/keybinding.service';
     ],
 })
 export class KeybindsComponent implements OnInit {
+    nameForm: FormGroup;
+
     opened: boolean;
 
     selectedKeybinding: any = null;
+    selectedKeybindingName: string;
     keybindingSelected: boolean;
     selectedClass: any = null;
 
     refresh: boolean = false;
 
+    editingName: boolean = false;
+
     /**
      * Constructor
      */
-    constructor(private keybindingService: KeybindingService) {
+    constructor(private keybindingService: KeybindingService, private _formBuilder: FormBuilder) {
         this.keybindingSelected = false;
-
     }
 
     ngOnInit(): void {
         this.opened = true;
+
+        this.nameForm = this._formBuilder.group({
+            name: ['', [Validators.required, Validators.maxLength(32)]]
+        });
+
     }
 
     onKeybindingSelected(keybinding: any) {
         console.log('onKeybindingSelected', keybinding)
         this.selectedKeybinding = keybinding; // Handle the emitted keybind from the child component
+        this.selectedKeybindingName = this.selectedKeybinding.name;
         this.keybindingSelected = true;
+        this.nameForm.get('name')?.setValue(this.selectedKeybindingName);
     }
 
     onSelectionClassChanged(value: string) {
@@ -90,6 +111,38 @@ export class KeybindsComponent implements OnInit {
     updateKeybindsInKeybinding() {
         const updatedKeybinds = [{ key: 'Ctrl+P', action: 'Print' }];
         this.keybindingService.updateKeybindsInKeybinding('Default', updatedKeybinds);
+    }
+
+    // onNameChange(newValue: string) {
+    //     console.log('Updated Value:', newValue);
+    //     this.keybindingService.updateKeybindingName(this.selectedKeybinding.id, newValue);
+    // }
+
+    editName() {
+        this.editingName = true;
+    }
+
+    saveName() {
+
+        if (this.nameForm.valid) {
+            console.log('Form Submitted', this.nameForm.value);
+            this.selectedKeybindingName = this.nameForm.value.name;
+            this.keybindingService.updateKeybindingName(this.selectedKeybinding.id, this.nameForm.value.name);
+        } else {
+            console.log('Form is invalid');
+        }
+
+        this.editingName = false;
+
+        console.log('this.selectedKeybindingName', this.selectedKeybindingName)
+    }
+
+    cancelName() {
+        this.editingName = false;
+        console.log('this.nameForm.get(name).value', this.nameForm.get('name').value);
+        this.nameForm.reset(); // Resets the form to its initial state
+        this.nameForm.get('name')?.setValue(this.selectedKeybindingName);
+        console.log('Form reset');
     }
 
 }

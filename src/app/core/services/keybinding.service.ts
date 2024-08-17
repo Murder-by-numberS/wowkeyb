@@ -40,4 +40,13 @@ export class KeybindingService {
         );
         this.keybindingsSource.next(updatedKeybindings);
     }
+
+    updateKeybindingName(id: string, name: string) {
+        const currentKeybindings = this.keybindingsSource.getValue();
+        const updatedKeybindings = currentKeybindings.map(kb =>
+            kb.id === id ? { ...kb, name } : kb
+        );
+
+        this.keybindingsSource.next(updatedKeybindings);
+    }
 }
