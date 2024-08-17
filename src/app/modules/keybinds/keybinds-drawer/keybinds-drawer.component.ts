@@ -15,7 +15,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAccordion } from '@angular/material/expansion';
 
 //Directives
-import { ClickOutsideDirective } from 'app/directives/click-outside/click-outside.directive';
+import { ClickOutsideDirective } from 'app/core/directives/click-outside/click-outside.directive';
 
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
@@ -53,13 +53,16 @@ export class KeybindsDrawerComponent implements OnInit {
     readonly panelOpenState = signal(false);
 
     keybindings: Keybinding[];
+    filteredKeybindings: Keybinding[];
     selectedKeybindId: string | null = null; // To keep track of the selected keybind
     @Output() keybindingSelected = new EventEmitter<any>();
     MAX_SIZE = 10;
 
-    classes = new FormControl('');
+    selectedClasses = new FormControl([]);
 
     classList = classes.map(obj => obj.name);
+
+    filterApplied: boolean = false;
 
     /**
      * Constructor
@@ -71,7 +74,7 @@ export class KeybindsDrawerComponent implements OnInit {
     ngOnInit(): void {
 
         this.keybindingService.currentKeybindings.subscribe(keybindings => this.keybindings = keybindings);
-
+        this.filteredKeybindings = this.keybindings;
         // //fetch keybindings for user if logged in
 
         // if (this.keybindings && this.keybindings.length > 0) {
@@ -108,6 +111,20 @@ export class KeybindsDrawerComponent implements OnInit {
 
     closeAccordion() {
         this.accordion.closeAll();
+
+        console.log('apply filter')
+        console.log('filter:', this.selectedClasses.value);
+        if (this.selectedClasses.value.length > 0) {
+            this.filterApplied = true;
+            console.log('this.selectedClasses.value', typeof this.selectedClasses.value);
+            this.applyFilter();
+        }
+        else {
+            this.filterApplied = false;
+            this.filteredKeybindings = this.keybindings;
+        }
+
+
     }
 
     isSelected(keybindId: string): boolean {
@@ -115,10 +132,21 @@ export class KeybindsDrawerComponent implements OnInit {
     }
 
     createKeybinding() {
-        const newKeybinding = { id: '3', name: 'Navigation', class: 'Warrior', keybinds: [{ key: 'Ctrl+N', action: 'New Tab' }] };
+        const newKeybinding = { id: '3', name: 'New Keybinding', class: 'Warrior', keybinds: [{ key: 'Ctrl+N', action: 'New Tab' }] };
         this.keybindingService.addKeybinding(newKeybinding);
+
         this.selectedKeybindId = newKeybinding.id;
         this.keybindingSelected.emit(newKeybinding);
+    }
+
+    applyFilter() {
+        this.filteredKeybindings = this.keybindings.filter(keybinding => this.selectedClasses.value.includes(keybinding.class));
+
+        if (!this.filteredKeybindings.some(keybinding => keybinding.id === this.selectedKeybindId)) {
+            this.selectedKeybindId = null;
+            this.keybindingSelected.emit(null);
+        }
+
     }
 
 }

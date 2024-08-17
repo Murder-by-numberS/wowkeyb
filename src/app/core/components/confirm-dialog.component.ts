@@ -11,7 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
     template: `
     <h2 mat-dialog-title>Confirm Selection</h2>
     <mat-dialog-content>
-      <p>Are you sure you want to select "{{ data.option }}"?</p>
+      <div class="flex flex-row"><p>{{data.text}}<p>
+        @if(data.option){<p class="ml-2">{{ data.option }}?<p>}</div>
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-stroked-button (click)="onCancel()">Cancel</button>

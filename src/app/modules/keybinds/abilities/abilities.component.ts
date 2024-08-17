@@ -12,7 +12,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { KeybindingService } from 'app/core/services/keybinding.service';
 
 //Components
-import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog.component';
 
 //Data
 import { classes } from 'app/core/data/classes';
@@ -74,7 +74,7 @@ export class AbilitiesComponent implements OnInit {
 
         const selectedOption = event.value;
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: { option: selectedOption }
+            data: { text: 'Are you sure you want to select', option: selectedOption }
         });
 
         dialogRef.afterClosed().subscribe(result => {
