@@ -1,5 +1,5 @@
 //Angular
-import { Component, ViewEncapsulation, OnInit, signal, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, signal, ViewChild, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -52,6 +52,8 @@ export class KeybindsDrawerComponent implements OnInit {
 
     readonly panelOpenState = signal(false);
 
+    @Input() refreshKeybindings: boolean;
+
     keybindings: Keybinding[];
     filteredKeybindings: Keybinding[];
     selectedKeybindId: string | null = null; // To keep track of the selected keybind
@@ -73,7 +75,7 @@ export class KeybindsDrawerComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.keybindingService.currentKeybindings.subscribe(keybindings => this.keybindings = keybindings);
+        this.loadKeybindings();
         this.filteredKeybindings = this.keybindings;
         // //fetch keybindings for user if logged in
 
@@ -100,6 +102,17 @@ export class KeybindsDrawerComponent implements OnInit {
     //     this.keybindSelected.emit(newKeybind);
     // }
     // }
+
+    // ngOnChanges(changes: SimpleChanges) {
+    //     if (changes['refreshKeybindings'] && changes['refreshKeybindings'].currentValue) {
+    //         this.loadKeybindings();
+    //     }
+    // }
+
+    loadKeybindings() {
+        this.keybindingService.currentKeybindings.subscribe(keybindings => this.keybindings = keybindings);
+        this.applyFilter();
+    }
 
     selectKeybinding(keybind: any): void {
         console.log('keybind selected', keybind);

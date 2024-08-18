@@ -1,5 +1,5 @@
 //Angular
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -21,6 +21,7 @@ import { KeyboardComponent } from './keyboard/keyboard.component';
 import { AbilitiesComponent } from './abilities/abilities.component';
 import { KeybindsDrawerComponent } from './keybinds-drawer/keybinds-drawer.component';
 import { ConfirmDialogComponent } from 'app/core/components/confirm-dialog.component';
+
 
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
@@ -50,6 +51,9 @@ import { AuthService } from 'app/core/auth/auth.service';
     ],
 })
 export class KeybindsComponent implements OnInit {
+
+    @ViewChild(KeybindsDrawerComponent) keybindsDrawerComponent: KeybindsDrawerComponent;
+
     isAuthenticated: boolean;
 
     nameForm: FormGroup;
@@ -94,6 +98,10 @@ export class KeybindsComponent implements OnInit {
 
     }
 
+    // refreshChildKeybindings() {
+    //     this.refresh = !this.refresh; // Toggle the value to trigger ngOnChanges in the child
+    // }
+
     onKeybindingSelected(keybinding: any) {
         console.log('onKeybindingSelected', keybinding)
         if (keybinding) {
@@ -127,10 +135,18 @@ export class KeybindsComponent implements OnInit {
                 this.keybindingService.removeKeybinding(this.selectedKeybinding.id);
                 this.selectedKeybinding = null;
                 this.keybindingSelected = false;
+                this.refreshChildKeybindings();
             } else {
                 console.log('Selection cancelled');
+                this.refreshChildKeybindings();
             }
         });
+    }
+
+    refreshChildKeybindings() {
+        if (this.keybindsDrawerComponent) {
+            this.keybindsDrawerComponent.loadKeybindings();
+        }
     }
 
     saveKeybinding() {

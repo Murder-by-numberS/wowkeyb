@@ -5,7 +5,7 @@
         <mat-drawer #drawer class="h-full w-64" mode="side" [(opened)]="opened">
             <keybinds-drawer (keybindingSelected)="onKeybindingSelected($event)"></keybinds-drawer>
         </mat-drawer>
-        <div class="mx-auto flex w-full flex-wrap pb-4">
+        <div class="mx-auto flex w-full flex-wrap pb-2">
             <div class="flex flex-row w-full justify-between items-center py-2 ml-6">
                 <div class="text-3xl font-semibold leading-8 tracking-tight">
                     Keybindings
@@ -20,8 +20,8 @@
 
                     <div matTooltip="You must be logged in to save." [matTooltipDisabled]="isAuthenticated"
                         aria-label="Div with dynamic tooltip">
-                        <button class="ml-3 hidden sm:inline-flex" mat-stroked-button [disabled]="!keybindingSelected"
-                            (click)="saveKeybinding()">
+                        <button class="ml-3 hidden sm:inline-flex" mat-stroked-button
+                            [disabled]="!keybindingSelected || !isAuthenticated" (click)="saveKeybinding()">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
                             <span class="ml-2">Save</span>
                         </button>
@@ -94,7 +94,7 @@
 
             </div>
         </div>
-        <div class="flex w-full bg-gray-300 max-h-24 min-h-20">
+        <div class="flex w-full bg-gray-300 max-h-24 min-h-24">
             <abilities [keybindingSelected]="keybindingSelected" [selectedKeybinding]="selectedKeybinding" />
         </div>
         <keyboard></keyboard>
