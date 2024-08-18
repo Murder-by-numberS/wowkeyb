@@ -1,0 +1,27 @@
+<div class="p-2 flex flex-row">
+    <div class="flex-col px-4">
+        @if (selectedKeybinding && selectedKeybindingClass) {
+        <mat-form-field appearance="fill" class="w-48">
+            <mat-label>Class: </mat-label>
+            <mat-select [(value)]="selectedKeybindingClass" [disabled]="!keybindingSelected"
+                (selectionChange)="onClassChange($event)">
+                @for (class of classes; track class) {
+                <mat-option [value]="class.name">{{class.name}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        }
+        @if (!selectedKeybinding && !selectedKeybindingClass) {
+        <mat-form-field appearance="fill" class="w-48">
+            <mat-label>Class: </mat-label>
+            <mat-select placeholder="Select an option" [disabled]="isDisabled">
+                <mat-option value="" disabled>Select an option</mat-option>
+                <!-- Dynamically add options here -->
+            </mat-select>
+        </mat-form-field>
+        }
+    </div>
+    <div>
+        Abilities
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="flex flex-col h-full text-nowrap">
+    <!-- Row 1 -->
+    <div class="flex-0 max-h-14 min-h-6 items-center justify-center p-4">
+        <div class="text-3xl font-semibold leading-8 tracking-tight">
+            Keybindings List
+        </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="flex-0 min-h-12 items-center justify-center">
+        <mat-accordion appClickOutside (clickOutside)="closeAccordion()">
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Filter</mat-panel-title>
+                    <mat-panel-description class="text-nowrap">{{selectedClasses.value?.[0] || ''}}
+                        @if ((selectedClasses.value?.length || 0) > 1) {
+                        <span>
+                            (+{{(selectedClasses.value?.length || 0) - 1}} {{selectedClasses.value?.length === 2 ?
+                            'other' : 'others'}})
+                        </span>
+                        }
+                        @if ((selectedClasses.value?.length || 0) < 1) { <p>None</p>
+                            }
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-form-field class="w-full">
+                    <mat-label>Classes</mat-label>
+                    <mat-select [formControl]="selectedClasses" multiple>
+                        <mat-select-trigger>
+                            {{selectedClasses.value?.[0] || ''}}
+                            @if ((selectedClasses.value?.length || 0) > 1) {
+                            <span>
+                                (+{{(selectedClasses.value?.length || 0) - 1}} {{selectedClasses.value?.length === 2 ?
+                                'other' :
+                                'others'}})
+                            </span>
+                            }
+                        </mat-select-trigger>
+                        @for (class of classList; track class) {
+                        <mat-option [value]="class">{{class}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </mat-expansion-panel>
+            <!-- <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Self aware panel </mat-panel-title>
+                    <mat-panel-description>
+                        Currently I am {{panelOpenState() ? 'open' : 'closed'}}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>I'm visible because I am open</p>
+            </mat-expansion-panel> -->
+        </mat-accordion>
+    </div>
+
+    <!-- Row -->
+    @for (keybinding of filteredKeybindings; track keybinding) {
+    <div [ngClass]="{
+        'bg-blue-500 text-white': isSelected(keybinding.id),
+        'bg-gray-200 text-black': !isSelected(keybinding.id)
+      }" class="flex flex-0 max-h-16 min-h-12 items-center px-4 cursor-pointer" (click)="selectKeybinding(keybinding)">
+        <p>{{keybinding.name}} - {{keybinding.class}}</p>
+    </div>
+    }
+
+    <!-- Last Row until max 100 has reached -->
+    @if (keybindings.length < MAX_SIZE) { <div class="flex flex-0 max-h-16 min-h-12 items-center justify-center">
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="createKeybinding()">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon>
+            <span class="ml-2">Create Keybinding</span>
+        </button>
+</div>
+}
+</div>
