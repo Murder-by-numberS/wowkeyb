@@ -126,7 +126,7 @@ export class KeybindsComponent implements OnInit {
     deleteKeybinding() {
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: { text: 'Are you sure you want to delete?' }
+            data: { text: `Are you sure you want to delete "${this.selectedKeybinding.name}"?` }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -138,7 +138,6 @@ export class KeybindsComponent implements OnInit {
                 this.refreshChildKeybindings();
             } else {
                 console.log('Selection cancelled');
-                this.refreshChildKeybindings();
             }
         });
     }
