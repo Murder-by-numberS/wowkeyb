@@ -153,13 +153,19 @@ export class KeybindsDrawerComponent implements OnInit {
     }
 
     applyFilter() {
-        this.filteredKeybindings = this.keybindings.filter(keybinding => this.selectedClasses.value.includes(keybinding.class));
+        if (this.filterApplied) {
 
-        if (!this.filteredKeybindings.some(keybinding => keybinding.id === this.selectedKeybindId)) {
-            this.selectedKeybindId = null;
-            this.keybindingSelected.emit(null);
+            console.log('applying filter');
+            this.filteredKeybindings = this.keybindings.filter(keybinding => this.selectedClasses.value.includes(keybinding.class));
+            console.log('this.filteredKeybindings', this.filteredKeybindings);
+            if (!this.filteredKeybindings.some(keybinding => keybinding.id === this.selectedKeybindId)) {
+                console.log('applying filter - selectedKeybindId', this.selectedKeybindId);
+                this.selectedKeybindId = null;
+                this.keybindingSelected.emit(null);
+            }
+        } else {
+            this.filteredKeybindings = this.keybindings;
         }
-
     }
 
 }

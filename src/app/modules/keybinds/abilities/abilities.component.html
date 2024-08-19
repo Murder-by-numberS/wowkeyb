@@ -22,6 +22,40 @@
         }
     </div>
     <div>
-        Abilities
+        @if (selectedKeybinding && selectedKeybindingClass) {
+        <mat-form-field appearance="fill" class="w-48">
+            <mat-label>Spec: </mat-label>
+            <mat-select [(value)]="selectedKeybindingSpec" [disabled]="!keybindingSelected"
+                (selectionChange)="onSpecChange($event)">
+                @for (spec of specs; track spec) {
+                <mat-option [value]="spec">{{spec}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        }
+    </div>
+    <div>
+        @if (selectedKeybinding && selectedKeybindingClass && selectedKeybindingSpec) {
+        <mat-form-field appearance="fill" class="w-48">
+            <mat-label>Hero Talent: </mat-label>
+            <mat-select [(value)]="selectedKeybindingHeroTalent" [disabled]="!keybindingSelected"
+                (selectionChange)="onHeroTalentChange($event)">
+                @for (heroTalent of heroTalents; track heroTalent) {
+                <mat-option [value]="heroTalent">{{heroTalent}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        }
+    </div>
+    <div class="flex flex-row">
+        @for (ability of abilities; track ability) {
+        <div class="flex flex-col">
+            <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+            <!-- <h3>{{ ability.name }}</h3>
+            <p>{{ ability.description }}</p>
+            <p>Power: {{ ability.power }}</p> -->
+        </div>
+        }
+
     </div>
 </div>

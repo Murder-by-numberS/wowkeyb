@@ -26,6 +26,7 @@ import { ConfirmDialogComponent } from 'app/core/components/confirm-dialog.compo
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
 import { AuthService } from 'app/core/auth/auth.service';
+
 @Component({
     selector: 'keybinds',
     templateUrl: './keybinds.component.html',
@@ -126,7 +127,7 @@ export class KeybindsComponent implements OnInit {
     deleteKeybinding() {
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: { text: `Are you sure you want to delete "${this.selectedKeybinding.name}"?` }
+            data: { text: `Are you sure you want to delete "${this.selectedKeybindingName}"?` }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -143,6 +144,7 @@ export class KeybindsComponent implements OnInit {
     }
 
     refreshChildKeybindings() {
+        console.log('refreshChildKeybindings');
         if (this.keybindsDrawerComponent) {
             this.keybindsDrawerComponent.loadKeybindings();
         }
@@ -183,6 +185,7 @@ export class KeybindsComponent implements OnInit {
         if (this.nameForm.valid) {
             console.log('Form Submitted', this.nameForm.value);
             this.selectedKeybindingName = this.nameForm.value.name;
+            this.selectedKeybinding.name = this.selectedKeybindingName;
             this.keybindingService.updateKeybindingName(this.selectedKeybinding.id, this.nameForm.value.name);
         } else {
             console.log('Form is invalid');
