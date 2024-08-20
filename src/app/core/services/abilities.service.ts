@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { environment } from 'environments/environment';
+
+import { formatString } from '../util/util';
+
 import { Ability } from '../types/ability';
 
 @Injectable({
@@ -12,19 +19,20 @@ export class AbilitiesService {
         { id: 3, name: 'Lightning Bolt', description: 'Strikes with a bolt of lightning.', power: 60, icon: 'assets/icons/lightning_bolt.png' },
     ];
 
-    constructor() { }
+    constructor(private http: HttpClient,) { }
 
-    getAbilities(wowClass: string): Ability[] {
-        return this.abilities;
-    }
+    // getAbilities(wowClass: string): Ability[] {
+    //     return this.abilities;
+    // }
 
     // //gets all proposals
-    // getProposals(): Observable<any> {
-    //     this.getBackendURL();
+    getAbilities(wowClass: string, spec: string, heroTalent: string): Observable<any> {
 
-    //     const urlString = `${this.apiUrl}/proposal`;
+        //lowercase class spec and heroTalent
 
-    //     return this.http.get(urlString);
-    // }
+        const urlString = `${environment.apiUrl}/abilities/${formatString(wowClass.toLowerCase())}/${formatString(spec.toLowerCase())}/${formatString(heroTalent.toLowerCase())}`;
+
+        return this.http.get(urlString);
+    }
 
 }
