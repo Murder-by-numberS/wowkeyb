@@ -80,11 +80,10 @@ export class AbilitiesComponent implements OnInit {
                 this.selectedKeybindingClass = this.selectedKeybinding.class;
                 this.selectedKeybindingSpec = this.selectedKeybinding.spec;
                 this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
+                this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
+                this.heroTalents = fullClasses[this.selectedKeybindingClass].specs[this.selectedKeybindingSpec]
                 if (this.selectedKeybindingSpec && this.selectedKeybindingHeroTalent) {
                     this.fetchAbilities();
-                } else {
-                    const classSpecs = fullClasses[this.selectedKeybindingClass].specs;
-                    this.specs = Object.keys(classSpecs);
                 }
 
             }
