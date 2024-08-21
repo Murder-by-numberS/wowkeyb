@@ -51,13 +51,24 @@
 <div class="p-2 flex flex-row w-full max-h-6 min-h-6">
     <p class="pl-2">Abilities</p>
 </div>
-<div class="p-2 flex flex-row w-full">
-    @for (ability of abilities; track ability) {
-    <div class="flex flex-col">
-        <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
-        <!-- <h3>{{ ability.name }}</h3>
-            <p>{{ ability.description }}</p>
-            <p>Power: {{ ability.power }}</p> -->
+<div class="w-full">
+    <div class="flex space-x-4 overflow-x-auto max-w-full">
+        @for (ability of abilities; track ability) {
+        <div class="flex-none w-64">
+            <div class="flex items-center">
+                <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+                <div>
+                    <!-- Optional: Additional content such as name, description, etc. -->
+                </div>
+            </div>
+        </div>
+        }
     </div>
-    }
 </div>
+
+<!-- <div class="flex flex-col">
+    <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+     <h3>{{ ability.name }}</h3>
+        <p>{{ ability.description }}</p>
+        <p>Power: {{ ability.power }}</p> -->
+<!-- </div> -->
