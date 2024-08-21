@@ -94,33 +94,53 @@ export class AbilitiesComponent implements OnInit {
     onClassChange(event: any) {
 
         const selectedOption = event.value;
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: { text: 'Are you sure you want to select', option: selectedOption }
-        });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                console.log('Selection confirmed:', selectedOption);
-                console.log('class changed');
-                this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption });
-                this.selectedKeybindingClass = selectedOption;
-                this.selectedKeybinding.class = this.selectedKeybindingClass;
-                this.selectedKeybinding.spec = undefined;
-                this.selectedKeybinding.heroTalent = undefined;
-                this.selectedKeybindingSpec = undefined;
-                this.selectedKeybindingHeroTalent = undefined;
-                console.log('this.selectedKeybindingSpec', this.selectedKeybindingSpec);
-                this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption, heroTalent: null, spec: null });
-                this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
-                console.log('this.specs', this.specs);
-                this.selectionClassChanged.emit(null);
-            } else {
-                console.log('Selection cancelled', this.selectedKeybinding.class);
-                this.selectedKeybindingClass = this.selectedKeybinding.class;
-                this.selectedKeybindingSpec = this.selectedKeybinding.spec;
-                this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
-            }
-        });
+        if (this.selectedKeybinding.spec) {
+
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                data: { text: 'Are you sure you want to select', option: selectedOption }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    console.log('Selection confirmed:', selectedOption);
+                    console.log('class changed');
+                    this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption });
+                    this.selectedKeybindingClass = selectedOption;
+                    this.selectedKeybinding.class = this.selectedKeybindingClass;
+                    this.selectedKeybinding.spec = undefined;
+                    this.selectedKeybinding.heroTalent = undefined;
+                    this.selectedKeybindingSpec = undefined;
+                    this.selectedKeybindingHeroTalent = undefined;
+                    console.log('this.selectedKeybindingSpec', this.selectedKeybindingSpec);
+                    this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption, heroTalent: null, spec: null });
+                    this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
+                    console.log('this.specs', this.specs);
+                    this.selectionClassChanged.emit(null);
+                    this.abilities = [];
+                } else {
+                    console.log('Selection cancelled', this.selectedKeybinding.class);
+                    this.selectedKeybindingClass = this.selectedKeybinding.class;
+                    this.selectedKeybindingSpec = this.selectedKeybinding.spec;
+                    this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
+                }
+            });
+
+        } else {
+            this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption });
+            this.selectedKeybindingClass = selectedOption;
+            this.selectedKeybinding.class = this.selectedKeybindingClass;
+            this.selectedKeybinding.spec = undefined;
+            this.selectedKeybinding.heroTalent = undefined;
+            this.selectedKeybindingSpec = undefined;
+            this.selectedKeybindingHeroTalent = undefined;
+            console.log('this.selectedKeybindingSpec', this.selectedKeybindingSpec);
+            this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption, heroTalent: null, spec: null });
+            this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
+            console.log('this.specs', this.specs);
+            this.selectionClassChanged.emit(null);
+            this.abilities = [];
+        }
     }
 
     onSpecChange(event: any) {
@@ -142,11 +162,9 @@ export class AbilitiesComponent implements OnInit {
                     this.selectedKeybinding.spec = this.selectedKeybindingSpec;
                     this.selectedKeybindingHeroTalent = undefined;
                     this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { heroTalent: selectedOption });
-                    // this.selectedKeybindingSpec = this.selectedKeybinding.spec;
-                    // this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
-                    // this.fetchAbilities();
                     this.heroTalents = fullClasses[this.selectedKeybindingClass].specs[this.selectedKeybindingSpec]
                     console.log('this.heroTalents', this.heroTalents);
+                    this.abilities = [];
                 } else {
                     console.log('Selection cancelled', this.selectedKeybinding.class);
                     this.selectedKeybindingClass = this.selectedKeybinding.class;
@@ -186,11 +204,13 @@ export class AbilitiesComponent implements OnInit {
                     // // this.fetchAbilities();
                     // this.specs = fullClasses[this.selectedKeybindingClass]
                     // console.log('this.specs');
+                    this.fetchAbilities();
                 } else {
                     console.log('Selection cancelled', this.selectedKeybinding.class);
                     this.selectedKeybindingClass = this.selectedKeybinding.class;
                     this.selectedKeybindingSpec = this.selectedKeybinding.spec;
                     this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
+                    this.fetchAbilities();
                 }
             });
 
@@ -198,6 +218,7 @@ export class AbilitiesComponent implements OnInit {
             this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { heroTalent: selectedOption });
             this.selectedKeybindingHeroTalent = selectedOption;
             this.selectedKeybinding.heroTalent = this.selectedKeybindingHeroTalent;
+            this.fetchAbilities();
         }
 
     }
@@ -205,10 +226,11 @@ export class AbilitiesComponent implements OnInit {
     fetchAbilities() {
         console.log('fetching abilities for class', this.selectedKeybindingClass);
 
-        this.abilities = this.abilitiesService.getAbilities(this.selectedKeybindingClass)
-        // .subscribe((data) => { this.data = data; },
-        //     (err) => {
-        //         console.log('getProps - err', err);
-        //     });
+        // this.abilities = this.abilitiesService.getAbilities(this.selectedKeybindingClass)
+        this.abilitiesService.getAbilities(this.selectedKeybindingClass, this.selectedKeybindingSpec, this.selectedKeybindingHeroTalent)
+            .subscribe((data) => { this.abilities = data; },
+                (err) => {
+                    console.log('getAbilities - err', err);
+                });
     }
 }

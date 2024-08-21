@@ -1,5 +1,5 @@
-<div class="p-2 flex flex-row">
-    <div class="flex-col px-4">
+<div class="pl-2 pt-2 flex flex-row">
+    <div class="flex-col px-2">
         @if (selectedKeybinding && selectedKeybindingClass) {
         <mat-form-field appearance="fill" class="w-48">
             <mat-label>Class: </mat-label>
@@ -21,8 +21,8 @@
         </mat-form-field>
         }
     </div>
-    <div>
-        @if (selectedKeybinding && selectedKeybindingClass) {
+    @if (selectedKeybinding && selectedKeybindingClass) {
+    <div class="flex-col px-2">
         <mat-form-field appearance="fill" class="w-48">
             <mat-label>Spec: </mat-label>
             <mat-select [(value)]="selectedKeybindingSpec" [disabled]="!keybindingSelected"
@@ -32,10 +32,10 @@
                 }
             </mat-select>
         </mat-form-field>
-        }
     </div>
-    <div>
-        @if (selectedKeybinding && selectedKeybindingClass && selectedKeybindingSpec) {
+    }
+    @if (selectedKeybinding && selectedKeybindingClass && selectedKeybindingSpec) {
+    <div class="flex-col px-2">
         <mat-form-field appearance="fill" class="w-48">
             <mat-label>Hero Talent: </mat-label>
             <mat-select [(value)]="selectedKeybindingHeroTalent" [disabled]="!keybindingSelected"
@@ -45,17 +45,30 @@
                 }
             </mat-select>
         </mat-form-field>
-        }
     </div>
-    <div class="flex flex-row">
+    }
+</div>
+<div class="p-2 flex flex-row w-full max-h-6 min-h-6">
+    <p class="pl-2">Abilities</p>
+</div>
+<div class="w-full">
+    <div class="flex space-x-4 overflow-x-auto max-w-full">
         @for (ability of abilities; track ability) {
-        <div class="flex flex-col">
-            <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
-            <!-- <h3>{{ ability.name }}</h3>
-            <p>{{ ability.description }}</p>
-            <p>Power: {{ ability.power }}</p> -->
+        <div class="flex-none w-64">
+            <div class="flex items-center">
+                <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+                <div>
+                    <!-- Optional: Additional content such as name, description, etc. -->
+                </div>
+            </div>
         </div>
         }
-
     </div>
 </div>
+
+<!-- <div class="flex flex-col">
+    <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+     <h3>{{ ability.name }}</h3>
+        <p>{{ ability.description }}</p>
+        <p>Power: {{ ability.power }}</p> -->
+<!-- </div> -->
