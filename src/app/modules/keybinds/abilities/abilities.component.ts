@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
@@ -35,7 +36,8 @@ import { Ability } from 'app/core/types/ability';
         MatSidenavModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule
     ],
 })
 export class AbilitiesComponent implements OnInit {
