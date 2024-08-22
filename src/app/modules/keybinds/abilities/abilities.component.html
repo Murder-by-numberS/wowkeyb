@@ -55,7 +55,8 @@
     <div class="flex overflow-x-auto max-w-full">
         @for (ability of abilities; track ability) {
         <div class="flex-none w-12">
-            <div class="flex items-center">
+            <div class="flex items-center" matTooltip="{{ ability.name }}: {{ ability.description }}"
+                matTooltipPosition="above">
                 <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
                 <div>
                     <!-- Optional: Additional content such as name, description, etc. -->
