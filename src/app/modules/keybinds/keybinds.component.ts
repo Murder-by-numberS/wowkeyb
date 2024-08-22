@@ -54,6 +54,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 export class KeybindsComponent implements OnInit {
 
     @ViewChild(KeybindsDrawerComponent) keybindsDrawerComponent: KeybindsDrawerComponent;
+    @ViewChild(AbilitiesComponent) abilitiesComponent: AbilitiesComponent;
 
     isAuthenticated: boolean;
 
@@ -147,6 +148,9 @@ export class KeybindsComponent implements OnInit {
         console.log('refreshChildKeybindings');
         if (this.keybindsDrawerComponent) {
             this.keybindsDrawerComponent.loadKeybindings();
+        }
+        if (this.abilitiesComponent) {
+            this.abilitiesComponent.abilities = [];
         }
     }
 
