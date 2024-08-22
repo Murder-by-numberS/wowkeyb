@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
@@ -35,7 +36,8 @@ import { Ability } from 'app/core/types/ability';
         MatSidenavModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule
     ],
 })
 export class AbilitiesComponent implements OnInit {
@@ -80,11 +82,10 @@ export class AbilitiesComponent implements OnInit {
                 this.selectedKeybindingClass = this.selectedKeybinding.class;
                 this.selectedKeybindingSpec = this.selectedKeybinding.spec;
                 this.selectedKeybindingHeroTalent = this.selectedKeybinding.heroTalent;
+                this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
+                this.heroTalents = fullClasses[this.selectedKeybindingClass].specs[this.selectedKeybindingSpec]
                 if (this.selectedKeybindingSpec && this.selectedKeybindingHeroTalent) {
                     this.fetchAbilities();
-                } else {
-                    const classSpecs = fullClasses[this.selectedKeybindingClass].specs;
-                    this.specs = Object.keys(classSpecs);
                 }
 
             }
