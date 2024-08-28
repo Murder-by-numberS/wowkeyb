@@ -51,20 +51,21 @@
 <div class="pl-4 pb-2 flex flex-row w-full max-h-6 min-h-6">
     <p class="">Abilities</p>
 </div>
-<div class="w-full pl-4">
-    <div class="flex overflow-x-auto max-w-full">
-        @for (ability of abilities; track ability) {
-        <div class="flex-none w-12">
-            <div class="flex items-center" matTooltip="{{ ability.name }}: {{ ability.description }}"
-                matTooltipPosition="above">
-                <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
-                <div>
-                    <!-- Optional: Additional content such as name, description, etc. -->
-                </div>
+<div class="w-full pl-4 flex">
+    <!-- <div class="flex overflow-x-auto max-w-full"> -->
+    @for (ability of abilities; track ability) {
+    <div class="flex flex-col w-12" cdkDrag (cdkDragStarted)="onDragStart(ability)" class="z-40"
+        (cdkDragEnded)="onDragEnd(ability)">
+        <div class="flex items-center" matTooltip="{{ ability.name }}: {{ ability.description }}"
+            matTooltipPosition="above">
+            <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">
+            <div>
+                <!-- Optional: Additional content such as name, description, etc. -->
             </div>
         </div>
-        }
     </div>
+    }
+    <!-- </div> -->
 </div>
 <!-- <div class="flex flex-col">
     <img [src]="ability.icon" alt="{{ ability.name }} icon" class="w-12 h-12">

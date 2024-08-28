@@ -1,6 +1,6 @@
 <div class="flex w-full flex-auto flex-col">
 
-    <mat-drawer-container class="h-full">
+    <mat-drawer-container class="h-full z-60">
 
         <mat-drawer #drawer class="h-full w-64" mode="side" [(opened)]="opened">
             <keybinds-drawer (keybindingSelected)="onKeybindingSelected($event)"></keybinds-drawer>
@@ -94,10 +94,12 @@
 
             </div>
         </div>
-        <div class="w-full bg-gray-300 max-h-48 min-h-48">
+        <div class="w-full bg-gray-300 max-h-48 min-h-48 z-50">
             <abilities [keybindingSelected]="keybindingSelected" [selectedKeybinding]="selectedKeybinding"
                 (selectionClassChanged)="refreshChildKeybindings()" />
         </div>
-        <keyboard></keyboard>
+        <div class="z-10">
+            <keyboard></keyboard>
+        </div>
     </mat-drawer-container>
 </div>
