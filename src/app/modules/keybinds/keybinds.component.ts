@@ -48,7 +48,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 
         KeyboardComponent,
         AbilitiesComponent,
-        KeybindsDrawerComponent,
+        KeybindsDrawerComponent
     ],
 })
 export class KeybindsComponent implements OnInit {
