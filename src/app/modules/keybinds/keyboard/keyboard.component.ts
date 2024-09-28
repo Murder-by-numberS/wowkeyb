@@ -4,23 +4,17 @@ import { CommonModule } from '@angular/common';
 
 import { NgxPanZoomModule, PanZoomComponent, PanZoomModel } from 'ngx-panzoom';
 
-import { DragDropModule, CdkDragDrop, CdkDragEnter, CdkDragExit } from '@angular/cdk/drag-drop';
-
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
-//Services
-import { DragStateService } from 'app/core/services/drag-state.service';
-
 interface Key {
     label: string;
     width: string;
     isHovered?: boolean;
 }
-
 
 @Component({
     selector: 'keyboard',
@@ -30,7 +24,6 @@ interface Key {
     imports: [
         RouterLink,
         CommonModule,
-        DragDropModule,
 
         MatButtonModule,
         MatIconModule,
@@ -45,13 +38,7 @@ export class KeyboardComponent implements OnInit {
     readonly panZoom = viewChild(PanZoomComponent);
     readonly panzoomModel = signal<PanZoomModel>(undefined!);
 
-    dragging: boolean = false;
     canZoom: boolean = true;
-
-    draggedItem: any;
-
-    //placeholder
-    items: any[] = []; // Array to hold the dropped items
 
     keyboardLayout: Key[][] = [
         // Define rows and keys with their respective widths
@@ -112,27 +99,9 @@ export class KeyboardComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(private dragStateService: DragStateService) { }
+    constructor() { }
 
     ngOnInit(): void {
-
-
-        this.dragStateService.isDragging$.subscribe((dragging) => {
-            console.log('dragging', dragging);
-            this.dragging = dragging;
-            if (dragging) {
-                console.log('toggling off zoom')
-                this.canZoom = false;
-            } else {
-                console.log('toggling on zoom')
-                this.canZoom = true;
-            }
-        });
-
-        // Subscribe to the dragged item observable
-        this.dragStateService.draggedItem$.subscribe((item) => {
-            this.draggedItem = item;
-        });
 
     }
 
@@ -192,24 +161,6 @@ export class KeyboardComponent implements OnInit {
 
     collapseKey(key: Key): void {
         key.isHovered = false;
-    }
-
-    onDrop(event: CdkDragDrop<any>): void {
-        console.log('DROPPING - event', event)
-        const draggedItem = this.draggedItem;
-        if (draggedItem) {
-            this.items.push(draggedItem); // Add the dragged item to the items array
-            this.dragStateService.stopDragging(draggedItem); // Stop dragging after the drop
-        }
-    }
-
-
-    onListEnter(event: CdkDragEnter<any>): void {
-        console.log('Drag entered:', event);
-    }
-
-    onListExit(event: CdkDragExit<any>): void {
-        console.log('Drag exited:', event);
     }
 
 }

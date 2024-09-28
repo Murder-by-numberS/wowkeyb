@@ -1,9 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-//CDK
-import { DragDropModule } from '@angular/cdk/drag-drop';
-
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +14,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 //Services
 import { KeybindingService } from 'app/core/services/keybinding.service';
 import { AbilitiesService } from 'app/core/services/abilities.service';
-import { DragStateService } from 'app/core/services/drag-state.service';
 
 //Components
 import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog.component';
@@ -36,8 +32,6 @@ import { Ability } from 'app/core/types/ability';
     standalone: true,
     imports: [
         RouterLink,
-
-        DragDropModule,
 
         MatButtonModule,
         MatIconModule,
@@ -75,7 +69,6 @@ export class AbilitiesComponent implements OnInit {
     constructor(
         private keybindingService: KeybindingService,
         private abilitiesService: AbilitiesService,
-        private dragStateService: DragStateService,
         private dialog: MatDialog
     ) {
         this.keybindingSelected = false;
@@ -243,16 +236,6 @@ export class AbilitiesComponent implements OnInit {
                 (err) => {
                     console.log('getAbilities - err', err);
                 });
-    }
-
-    onDragStart(item: any): void {
-        console.log('dragging - ', item)
-        this.dragStateService.startDragging(item);
-    }
-
-    onDragEnd(item: any): void {
-        console.log('end dragging - ', item)
-        this.dragStateService.stopDragging(item);
     }
 
 }
