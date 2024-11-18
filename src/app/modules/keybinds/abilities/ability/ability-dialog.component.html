@@ -1,0 +1,26 @@
+<h2 mat-dialog-title class="text-xl font-semibold">{{ data.name }}</h2>
+
+<mat-dialog-content class="p-4">
+    <div class="flex items-center mb-4">
+        <img [src]="data.icon" alt="{{ data.name }} icon" class="w-16 h-16 rounded-md shadow-md mr-4">
+        <div>
+            <p class="text-sm text-gray-700">{{ data.description }}</p>
+        </div>
+    </div>
+
+    <!-- Display the keybinding or message if none is set -->
+    <div class="mt-4">
+        <p class="font-medium">Keybinding:</p>
+        <p class="text-gray-600">
+            {{ newKeybinding ? newKeybinding : 'Please select a keybinding' }}
+        </p>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="flex justify-end space-x-4 p-4">
+    <button mat-button (click)="close()"
+        class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md">Close</button>
+    <button mat-button (click)="confirm()"
+        class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Save</button>
+</mat-dialog-actions>

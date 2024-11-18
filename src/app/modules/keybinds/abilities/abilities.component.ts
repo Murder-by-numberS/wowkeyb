@@ -17,6 +17,7 @@ import { AbilitiesService } from 'app/core/services/abilities.service';
 
 //Components
 import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog.component';
+import { AbilityDialogComponent } from './ability/ability-dialog.component';
 
 //Data
 import { classes, fullClasses } from 'app/core/data/classes';
@@ -40,7 +41,8 @@ import { Ability } from 'app/core/types/ability';
         MatFormFieldModule,
         MatSelectModule,
         MatDialogModule,
-        MatTooltipModule
+        MatTooltipModule,
+
     ],
 })
 export class AbilitiesComponent implements OnInit {
@@ -236,6 +238,19 @@ export class AbilitiesComponent implements OnInit {
                 (err) => {
                     console.log('getAbilities - err', err);
                 });
+    }
+
+    selectKey(ability) {
+        console.log('selecting key: open a modal', ability);
+
+        const dialogRef = this.dialog.open(AbilityDialogComponent, {
+            data: ability
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('Dialog closed with result:', result);
+        });
+
     }
 
 }
