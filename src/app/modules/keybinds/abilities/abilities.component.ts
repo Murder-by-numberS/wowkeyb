@@ -17,7 +17,7 @@ import { AbilitiesService } from 'app/core/services/abilities.service';
 
 //Components
 import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog.component';
-import { AbilityDialogComponent } from './ability/ability-dialog.component';
+import { AbilityDialogComponent } from './ability-dialog/ability-dialog.component';
 
 //Data
 import { classes, fullClasses } from 'app/core/data/classes';
@@ -65,6 +65,11 @@ export class AbilitiesComponent implements OnInit {
     heroTalents = [];
 
     @Output() selectionClassChanged = new EventEmitter<string>();
+
+    currentPage = 0;
+    abilitiesPerPage = 12; // Set the number of abilities per page
+
+
     /**
      * Constructor
      */
@@ -240,7 +245,7 @@ export class AbilitiesComponent implements OnInit {
                 });
     }
 
-    selectKey(ability) {
+    selectKey(ability: Ability) {
         console.log('selecting key: open a modal', ability);
 
         const dialogRef = this.dialog.open(AbilityDialogComponent, {
@@ -249,8 +254,52 @@ export class AbilitiesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('Dialog closed with result:', result);
+            if (result) {
+                ability = result;
+                console.log('ability', ability);
+                const foundAbility = this.abilities.find(a => a.spellId === ability.spellId)
+                console.log('foundAbility', foundAbility);
+                foundAbility.keybinding = ability.keybinding;
+            }
         });
 
+    }
+
+    // Get the abilities for the current page
+    getAbilitiesForCurrentPage() {
+        const startIndex = this.currentPage * this.abilitiesPerPage;
+        const endIndex = startIndex + this.abilitiesPerPage;
+        return this.abilities.slice(startIndex, endIndex);
+    }
+
+    // Go to the previous page
+    goToPreviousPage() {
+        if (this.currentPage > 0) {
+            this.currentPage--;
+        }
+    }
+
+    // Go to the next page
+    goToNextPage() {
+        if (this.currentPage < this.maxPage()) {
+            this.currentPage++;
+        }
+    }
+
+    // Calculate the maximum page index
+    maxPage() {
+        return Math.floor(this.abilities.length / this.abilitiesPerPage);
+    }
+
+    // Get the start index of the current page
+    getStartIndex() {
+        return this.currentPage * this.abilitiesPerPage;
+    }
+
+    // Get the end index of the current page
+    getEndIndex() {
+        const endIndex = (this.currentPage + 1) * this.abilitiesPerPage;
+        return endIndex > this.abilities.length ? this.abilities.length : endIndex;
     }
 
 }

@@ -94,7 +94,10 @@ export class AbilityDialogComponent {
         console.log(`Keybinding: ${this.newKeybinding}`);
     }
 
-
+    resetKeybinding() {
+        // Reset the keybinding (set to null or a default value)
+        this.newKeybinding = null;
+    }
 
 
 }

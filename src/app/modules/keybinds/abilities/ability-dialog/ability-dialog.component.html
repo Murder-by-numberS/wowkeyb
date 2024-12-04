@@ -16,6 +16,13 @@
         </p>
     </div>
 
+    <!-- Reset Keybinding Button -->
+    <div class="mt-4">
+        @if (newKeybinding) {
+        <button mat-button (click)="resetKeybinding()"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Reset Keybinding</button>
+        }
+    </div>
 </mat-dialog-content>
 
 <mat-dialog-actions class="flex justify-end space-x-4 p-4">
