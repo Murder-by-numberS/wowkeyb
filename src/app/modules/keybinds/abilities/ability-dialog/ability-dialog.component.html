@@ -8,26 +8,43 @@
         </div>
     </div>
 
+    <!-- Reset Keybinding Button -->
+    <div class="mt-4">
+        @if (!isKeybindingActive) {
+        @if (newKeybinding) {
+        <p class="font-medium">Keybinding:</p>
+        <p class="text-gray-600">
+            {{ newKeybinding }}
+        </p>
+        }
+        <button mat-button (click)="toggleKeybinding()"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Toggle Keybinding</button>
+        }
+    </div>
+
     <!-- Display the keybinding or message if none is set -->
     <div class="mt-4">
+        @if (isKeybindingActive) {
         <p class="font-medium">Keybinding:</p>
         <p class="text-gray-600">
             {{ newKeybinding ? newKeybinding : 'Please select a keybinding' }}
         </p>
-    </div>
-
-    <!-- Reset Keybinding Button -->
-    <div class="mt-4">
         @if (newKeybinding) {
         <button mat-button (click)="resetKeybinding()"
             class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Reset Keybinding</button>
         }
+        <button mat-button (click)="toggleKeybinding()"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Confirm Keybinding</button>
+        }
     </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions class="flex justify-end space-x-4 p-4">
     <button mat-button (click)="close()"
         class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md">Close</button>
+    @if (hasKeybindingChanged()) {
     <button mat-button (click)="confirm()"
         class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md">Save</button>
+    }
 </mat-dialog-actions>

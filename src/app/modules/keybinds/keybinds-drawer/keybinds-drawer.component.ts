@@ -145,7 +145,7 @@ export class KeybindsDrawerComponent implements OnInit {
     }
 
     createKeybinding() {
-        const newKeybinding = { id: '3', name: 'New Keybinding', class: 'Warrior', keybinds: [{ key: 'Ctrl+N', action: 'New Tab' }] };
+        const newKeybinding = { id: '3', name: 'New Keybinding', class: 'Warrior', keybinds: [] };
         this.keybindingService.addKeybinding(newKeybinding);
 
         this.selectedKeybindId = newKeybinding.id;

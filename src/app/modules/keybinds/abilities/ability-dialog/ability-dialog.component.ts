@@ -17,12 +17,17 @@ export class AbilityDialogComponent {
 
     // Store the new keybinding value
     newKeybinding: string = this.data.keybinding;
+    previousKeybinding: string | null = null;
 
+    // Flag to control whether keypress detection is active
+    isKeybindingActive = false;
 
     constructor(
         public dialogRef: MatDialogRef<AbilityDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
-    ) { }
+    ) {
+        this.previousKeybinding = this.newKeybinding;
+    }
 
     close(): void {
         this.dialogRef.close();
@@ -33,10 +38,26 @@ export class AbilityDialogComponent {
         this.dialogRef.close({ ...this.data, keybinding: this.newKeybinding });
     }
 
+    // Toggle keybinding detection
+    toggleKeybinding() {
+        this.isKeybindingActive = !this.isKeybindingActive;
+        console.log(`Keybinding detection is now ${this.isKeybindingActive ? 'active' : 'inactive'}`);
+
+        // if (this.isKeybindingActive) {
+        //     this.previousKeybinding = this.newKeybinding;
+        // }
+
+    }
+
     // Listen for the keydown event globally
     @HostListener('document:keydown', ['$event'])
     captureKeyPress(event: KeyboardEvent): void {
-        console.log('event', event);
+
+        // Process only if keybinding is active
+        if (!this.isKeybindingActive) {
+            return; // Exit early if keybinding detection is not active
+        }
+
         // Prevent default behavior to avoid character input (like typing the @ symbol)
         event.preventDefault();
 
@@ -94,10 +115,15 @@ export class AbilityDialogComponent {
         console.log(`Keybinding: ${this.newKeybinding}`);
     }
 
+    // Reset keybinding
     resetKeybinding() {
-        // Reset the keybinding (set to null or a default value)
+        this.previousKeybinding = this.newKeybinding;
         this.newKeybinding = null;
     }
 
+    // Method to determine if there is a change in keybinding
+    hasKeybindingChanged(): boolean {
+        return this.newKeybinding !== this.previousKeybinding && !this.isKeybindingActive;
+    }
 
 }

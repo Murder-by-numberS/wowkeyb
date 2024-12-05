@@ -97,7 +97,8 @@
             </div>
             <div cdkDropListGroup class="w-full bg-gray-300 max-h-48 min-h-48">
                 <abilities [keybindingSelected]="keybindingSelected" [selectedKeybinding]="selectedKeybinding"
-                    (selectionClassChanged)="refreshChildKeybindings()" />
+                    (selectionClassChanged)="refreshChildKeybindings()"
+                    (keybindingUpdated)="updateKeybinding($event)" />
             </div>
             <div cdkDropListGroup class="">
                 <keyboard></keyboard>
