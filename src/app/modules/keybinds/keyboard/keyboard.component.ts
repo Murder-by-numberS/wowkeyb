@@ -1,5 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, viewChild, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, ViewEncapsulation, OnInit, viewChild, Input, signal, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgxPanZoomModule, PanZoomComponent, PanZoomModel } from 'ngx-panzoom';
@@ -10,10 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
+import { Keybinding } from 'app/core/types/keybinding';
+
 interface Key {
     label: string;
     width: string;
     isHovered?: boolean;
+    keybinds?: { key: string, spell?: string }[]
 }
 
 @Component({
@@ -22,7 +24,6 @@ interface Key {
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        RouterLink,
         CommonModule,
 
         MatButtonModule,
@@ -34,6 +35,9 @@ interface Key {
     ],
 })
 export class KeyboardComponent implements OnInit {
+
+    @Input()
+    selectedKeybinding: Keybinding;
 
     readonly panZoom = viewChild(PanZoomComponent);
     readonly panzoomModel = signal<PanZoomModel>(undefined!);
@@ -162,5 +166,51 @@ export class KeyboardComponent implements OnInit {
     collapseKey(key: Key): void {
         key.isHovered = false;
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['selectedKeybinding']) {
+            console.log('Keyboard - inputProp changed:', changes['selectedKeybinding'].currentValue);
+            this.updateKeyboardBindings();
+        }
+    }
+
+    private updateKeyboardBindings(): void {
+        // First, clear all existing keybindings and hover states
+        this.keyboardLayout.forEach(row => {
+            row.forEach(keyItem => {
+                keyItem.keybinds = [];
+                keyItem.isHovered = false;
+            });
+        });
+
+        // Only add new keybindings if we have a selected keybinding
+        if (this.selectedKeybinding?.keybinds) {
+            this.selectedKeybinding.keybinds.forEach(keybind => {
+                this.addKeybinding(keybind);
+            });
+        }
+    }
+
+    addKeybinding(keybind) {
+        const { key, spell } = keybind;
+
+        const keyParts = key.toLowerCase().split('+');
+
+        const mainKey = keyParts[keyParts.length - 1].toUpperCase(); // Convert to uppercase for matching
+
+        // Find and update the matching key
+        this.keyboardLayout.forEach(row => {
+            row.forEach(keyItem => {
+                if (keyItem.label.toUpperCase() === mainKey) {
+                    if (!keyItem.keybinds) {
+                        keyItem.keybinds = [];
+                    }
+                    keyItem.keybinds.push({ key, spell });
+                }
+            });
+        });
+    }
+
+
 
 }

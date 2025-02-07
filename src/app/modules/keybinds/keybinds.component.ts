@@ -1,6 +1,5 @@
 //Angular
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -33,8 +32,6 @@ import { AuthService } from 'app/core/auth/auth.service';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        RouterLink,
-
         FormsModule,
         ReactiveFormsModule,
 

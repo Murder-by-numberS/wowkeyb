@@ -5,5 +5,5 @@ export interface Ability {
     description: string;
     power: number;
     icon: string;  // Path or URL to the icon image,
-    keybinding: string;
+    keybindings: string[];
 }

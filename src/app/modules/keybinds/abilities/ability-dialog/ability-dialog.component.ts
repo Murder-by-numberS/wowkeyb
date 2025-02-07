@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, Inject, HostListener } from '@angular/core';
 import { MatDialogActions, MatDialogContent } from '@angular/material/dialog';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { KeybindingService } from 'app/core/services/keybinding.service';
 
 @Component({
     selector: 'ability-dialog',
@@ -15,115 +16,116 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class AbilityDialogComponent {
     isOpen = false;
 
-    // Store the new keybinding value
-    newKeybinding: string = this.data.keybinding;
-    previousKeybinding: string | null = null;
-
-    // Flag to control whether keypress detection is active
+    keybindings: string[] = [];
+    originalKeybindings: string[] = [];
+    newKeybinding: string | null = null;
     isKeybindingActive = false;
+    errorMessage: string | null = null;
+    private readonly ERROR_TIMEOUT = 3000; // 3 seconds
 
     constructor(
-        public dialogRef: MatDialogRef<AbilityDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any
+        @Inject(MAT_DIALOG_DATA) public data: AbilityDialogData,
+        private dialogRef: MatDialogRef<AbilityDialogComponent>,
+        private keybindingService: KeybindingService
     ) {
-        this.previousKeybinding = this.newKeybinding;
+        // Initialize keybindings from data with deep copies
+        this.originalKeybindings = [...(data.ability.keybindings || [])];
+        this.keybindings = [...(data.ability.keybindings || [])];
+    }
+
+    toggleKeybinding(): void {
+        if (this.isKeybindingActive) {
+            // Add the new keybinding if it exists
+            if (this.newKeybinding) {
+                if (this.keybindingService.hasKeybindKey(this.data.keybinding.id, this.newKeybinding)) {
+                    this.errorMessage = `The key "${this.newKeybinding}" is already in use`;
+                    setTimeout(() => {
+                        this.errorMessage = null;
+                    }, this.ERROR_TIMEOUT);
+                    return;
+                }
+                this.keybindings.push(this.newKeybinding);
+                this.errorMessage = null;
+            }
+            this.newKeybinding = null;
+        }
+        this.isKeybindingActive = !this.isKeybindingActive;
+    }
+
+    removeKeybinding(binding: string): void {
+        this.keybindings = this.keybindings.filter(kb => kb !== binding);
+    }
+
+    cancelKeybinding(): void {
+        this.newKeybinding = null;
+        this.isKeybindingActive = false;
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent): void {
+        if (!this.isKeybindingActive) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const key = event.key.toLowerCase();
+        if (key === 'escape') {
+            this.cancelKeybinding();
+            return;
+        }
+
+        // Create keybinding string
+        const modifiers = [];
+        if (event.ctrlKey) modifiers.push('Ctrl');
+        if (event.shiftKey) modifiers.push('Shift');
+        if (event.altKey) modifiers.push('Alt');
+
+        // Handle numbers specifically to prevent shift+number becoming special characters
+        let keyString;
+        if (event.code.startsWith('Digit')) {
+            keyString = event.code.replace('Digit', '');
+        } else {
+            // Don't use the key directly if it's a modifier key
+            if (['shift', 'control', 'alt'].includes(key)) {
+                return; // Skip if it's just a modifier key press
+            }
+            keyString = key === ' ' ? 'Space' : event.key;
+        }
+
+        this.newKeybinding = [...modifiers, keyString].join('+');
+    }
+
+    hasKeybindingChanged(): boolean {
+        if (this.originalKeybindings.length === 0 && this.keybindings.length === 0) return false;
+        if (this.originalKeybindings.length !== this.keybindings.length) return true;
+        return this.originalKeybindings[0] !== this.keybindings[0];
+    }
+
+    confirm(): void {
+        console.log('confirming keybindings', this.keybindings);
+        this.dialogRef.close({
+            keybindings: this.keybindings
+        });
     }
 
     close(): void {
         this.dialogRef.close();
     }
+}
 
-    confirm(): void {
-        // When the user confirms, return the new keybinding along with the other data
-        this.dialogRef.close({ ...this.data, keybinding: this.newKeybinding });
+// Update the interface to support multiple keybindings
+interface AbilityDialogData {
+    ability: {
+        name: string;
+        icon: string;
+        description: string;
+        keybindings?: string[];
+    },
+    keybinding: {
+        id: string;
+        keybinds: {
+            key: string;
+            spell: string;
+        }[];
     }
-
-    // Toggle keybinding detection
-    toggleKeybinding() {
-        this.isKeybindingActive = !this.isKeybindingActive;
-        console.log(`Keybinding detection is now ${this.isKeybindingActive ? 'active' : 'inactive'}`);
-
-        // if (this.isKeybindingActive) {
-        //     this.previousKeybinding = this.newKeybinding;
-        // }
-
-    }
-
-    // Listen for the keydown event globally
-    @HostListener('document:keydown', ['$event'])
-    captureKeyPress(event: KeyboardEvent): void {
-
-        // Process only if keybinding is active
-        if (!this.isKeybindingActive) {
-            return; // Exit early if keybinding detection is not active
-        }
-
-        // Prevent default behavior to avoid character input (like typing the @ symbol)
-        event.preventDefault();
-
-        const modifierKeys = [];
-
-        // Check for modifier keys and add them to the array
-        if (event.ctrlKey) modifierKeys.push('ctrl');
-        if (event.altKey) modifierKeys.push('alt');
-        if (event.shiftKey) modifierKeys.push('shift');
-
-        // Get the actual key pressed (e.g., 1, 2, A, etc.)
-        let key = event.key;
-        console.log('key', key);
-        // Handle special cases for shift + number keys, converting symbols to numbers
-        if (event.shiftKey) {
-
-            console.log('shift was pressed');
-            console.log('key', key);
-
-            switch (key) {
-                case '1': key = '1'; break;  // shift + 1 => 1 (no change)
-                case '2': key = '2'; break;  // shift + 2 => 2 (no change)
-                case '3': key = '3'; break;  // shift + 3 => 3 (no change)
-                case '4': key = '4'; break;  // shift + 4 => 4 (no change)
-                case '5': key = '5'; break;  // shift + 5 => 5 (no change)
-                case '6': key = '6'; break;  // shift + 6 => 6 (no change)
-                case '7': key = '7'; break;  // shift + 7 => 7 (no change)
-                case '8': key = '8'; break;  // shift + 8 => 8 (no change)
-                case '9': key = '9'; break;  // shift + 9 => 9 (no change)
-                case '0': key = '0'; break;  // shift + 0 => 0 (no change)
-
-                // Map shifted symbols to numbers
-                case '!': key = '1'; break;  // shift + 1 => 1
-                case '@': key = '2'; break;  // shift + 2 => 2
-                case '#': key = '3'; break;  // shift + 3 => 3
-                case '$': key = '4'; break;  // shift + 4 => 4
-                case '%': key = '5'; break;  // shift + 5 => 5
-                case '^': key = '6'; break;  // shift + 6 => 6
-                case '&': key = '7'; break;  // shift + 7 => 7
-                case '*': key = '8'; break;  // shift + 8 => 8
-                case '(': key = '9'; break;  // shift + 9 => 9
-                case ')': key = '0'; break;  // shift + 0 => 0
-                default: break;
-            }
-        }
-
-        // Ensure that we don't capture modifier keys like 'Shift', 'Control', or 'Alt'
-        if (key !== 'Control' && key !== 'Alt' && key !== 'Shift') {
-            // Join the modifier keys with the pressed key
-            this.newKeybinding = [...modifierKeys, key].join(' + ');
-        }
-
-        // Log the key press for debugging
-        console.log(`Key pressed: ${key}`);
-        console.log(`Keybinding: ${this.newKeybinding}`);
-    }
-
-    // Reset keybinding
-    resetKeybinding() {
-        this.previousKeybinding = this.newKeybinding;
-        this.newKeybinding = null;
-    }
-
-    // Method to determine if there is a change in keybinding
-    hasKeybindingChanged(): boolean {
-        return this.newKeybinding !== this.previousKeybinding && !this.isKeybindingActive;
-    }
-
 }

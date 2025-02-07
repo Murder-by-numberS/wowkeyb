@@ -1,5 +1,4 @@
 import { Component, ViewEncapsulation, OnInit, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 //Material
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +31,6 @@ import { Ability } from 'app/core/types/ability';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        RouterLink,
 
         MatButtonModule,
         MatIconModule,
@@ -69,7 +67,6 @@ export class AbilitiesComponent implements OnInit {
 
     currentPage = 0;
     abilitiesPerPage = 12; // Set the number of abilities per page
-
 
     /**
      * Constructor
@@ -250,53 +247,58 @@ export class AbilitiesComponent implements OnInit {
         console.log('selecting key: open a modal', ability);
 
         const dialogRef = this.dialog.open(AbilityDialogComponent, {
-            data: ability
+            data: { ability, keybinding: this.selectedKeybinding }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log('Dialog closed with result:', result);
             if (result) {
-                ability = result;
-                console.log('ability', ability);
-                const foundAbility = this.abilities.find(a => a.spellId === ability.spellId)
-                console.log('foundAbility', foundAbility);
-                foundAbility.keybinding = ability.keybinding;
-                // console.log('selectedKeybinding', this.selectedKeybinding);
-                // //update the keybinding
-                const updatedKeybinds = [{ key: ability.keybinding, spell: ability }];
+                const oldKeybindings = ability.keybindings || [];
+                const newKeybindings = result.keybindings;
 
-                this.keybindingUpdated.emit(updatedKeybinds);
-                console.log('selectedKeybinding', this.selectedKeybinding);
+                // Handle removed keybindings
+                const removedKeybinds = oldKeybindings
+                    .filter(key => !newKeybindings.includes(key))
+                    .map(key => ({ key, spell: ability }));
+
+                // Handle added keybindings
+                const addedKeybinds = newKeybindings
+                    .filter(key => !oldKeybindings.includes(key))
+                    .map(key => ({ key, spell: ability }));
+
+                // Update the ability's keybindings
+                console.log('newKeybindings', newKeybindings);
+                ability.keybindings = newKeybindings;
+
+                this.keybindingUpdated.emit({
+                    addedKeybinds,
+                    removedKeybinds
+                });
             }
         });
-
     }
 
     // Get the abilities for the current page
     getAbilitiesForCurrentPage() {
         const startIndex = this.currentPage * this.abilitiesPerPage;
         const endIndex = startIndex + this.abilitiesPerPage;
-        console.log('getAbilitiesForCurrentPage', this.abilities.slice(startIndex, endIndex));
-        //check if there are keybinds
-        if (this.selectedKeybinding?.keybinds.length > 0) {
-            console.log('set keys');
-            console.log('this.abilities', this.abilities)
-            console.log('this.selectedKeybinding', this.selectedKeybinding?.keybinds);
 
+        if (this.selectedKeybinding?.keybinds.length > 0) {
             // Loop through each keybinding in the selectedKeybinding.keybinds array
             this.selectedKeybinding.keybinds.forEach(keybind => {
-                console.log('keybind', keybind);
-                const spellId = keybind.spell.spellId;  // Get the spellId from the keybind
-                // console.log('spellId.spellId', spellId.spellId);
-                // // Find the corresponding ability in the abilities array based on spellId
+                const spellId = keybind.spell.spellId;
                 const ability = this.abilities.find(ability => ability.spellId === spellId);
 
                 if (ability) {
-                    // Update the key field of the matching ability
-                    ability.keybinding = keybind.key;
+                    // Initialize keybindings array if it doesn't exist
+                    if (!ability.keybindings) {
+                        ability.keybindings = [];
+                    }
+                    // Add the key if it's not already in the keybindings array
+                    if (!ability.keybindings.includes(keybind.key)) {
+                        ability.keybindings.push(keybind.key);
+                    }
                 }
             });
-
         }
 
         return this.abilities.slice(startIndex, endIndex);

@@ -101,7 +101,7 @@
                     (keybindingUpdated)="updateKeybinding($event)" />
             </div>
             <div cdkDropListGroup class="">
-                <keyboard></keyboard>
+                <keyboard [selectedKeybinding]="selectedKeybinding"></keyboard>
             </div>
         </mat-drawer-content>
     </mat-drawer-container>
