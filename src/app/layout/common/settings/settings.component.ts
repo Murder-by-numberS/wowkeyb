@@ -58,7 +58,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     constructor(
         private _router: Router,
         private _fuseConfigService: FuseConfigService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

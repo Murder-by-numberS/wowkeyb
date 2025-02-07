@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
+//Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -15,6 +16,7 @@ import { AbilitiesService } from 'app/core/services/abilities.service';
 
 //Components
 import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog.component';
+import { AbilityDialogComponent } from './ability-dialog/ability-dialog.component';
 
 //Data
 import { classes, fullClasses } from 'app/core/data/classes';
@@ -29,7 +31,7 @@ import { Ability } from 'app/core/types/ability';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        RouterLink,
+
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
@@ -37,7 +39,8 @@ import { Ability } from 'app/core/types/ability';
         MatFormFieldModule,
         MatSelectModule,
         MatDialogModule,
-        MatTooltipModule
+        MatTooltipModule,
+
     ],
 })
 export class AbilitiesComponent implements OnInit {
@@ -60,6 +63,11 @@ export class AbilitiesComponent implements OnInit {
     heroTalents = [];
 
     @Output() selectionClassChanged = new EventEmitter<string>();
+    @Output() keybindingUpdated = new EventEmitter<any>();
+
+    currentPage = 0;
+    abilitiesPerPage = 12; // Set the number of abilities per page
+
     /**
      * Constructor
      */
@@ -234,4 +242,96 @@ export class AbilitiesComponent implements OnInit {
                     console.log('getAbilities - err', err);
                 });
     }
+
+    selectKey(ability: Ability) {
+        console.log('selecting key: open a modal', ability);
+
+        const dialogRef = this.dialog.open(AbilityDialogComponent, {
+            data: { ability, keybinding: this.selectedKeybinding }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const oldKeybindings = ability.keybindings || [];
+                const newKeybindings = result.keybindings;
+
+                // Handle removed keybindings
+                const removedKeybinds = oldKeybindings
+                    .filter(key => !newKeybindings.includes(key))
+                    .map(key => ({ key, spell: ability }));
+
+                // Handle added keybindings
+                const addedKeybinds = newKeybindings
+                    .filter(key => !oldKeybindings.includes(key))
+                    .map(key => ({ key, spell: ability }));
+
+                // Update the ability's keybindings
+                console.log('newKeybindings', newKeybindings);
+                ability.keybindings = newKeybindings;
+
+                this.keybindingUpdated.emit({
+                    addedKeybinds,
+                    removedKeybinds
+                });
+            }
+        });
+    }
+
+    // Get the abilities for the current page
+    getAbilitiesForCurrentPage() {
+        const startIndex = this.currentPage * this.abilitiesPerPage;
+        const endIndex = startIndex + this.abilitiesPerPage;
+
+        if (this.selectedKeybinding?.keybinds.length > 0) {
+            // Loop through each keybinding in the selectedKeybinding.keybinds array
+            this.selectedKeybinding.keybinds.forEach(keybind => {
+                const spellId = keybind.spell.spellId;
+                const ability = this.abilities.find(ability => ability.spellId === spellId);
+
+                if (ability) {
+                    // Initialize keybindings array if it doesn't exist
+                    if (!ability.keybindings) {
+                        ability.keybindings = [];
+                    }
+                    // Add the key if it's not already in the keybindings array
+                    if (!ability.keybindings.includes(keybind.key)) {
+                        ability.keybindings.push(keybind.key);
+                    }
+                }
+            });
+        }
+
+        return this.abilities.slice(startIndex, endIndex);
+    }
+
+    // Go to the previous page
+    goToPreviousPage() {
+        if (this.currentPage > 0) {
+            this.currentPage--;
+        }
+    }
+
+    // Go to the next page
+    goToNextPage() {
+        if (this.currentPage < this.maxPage()) {
+            this.currentPage++;
+        }
+    }
+
+    // Calculate the maximum page index
+    maxPage() {
+        return Math.floor(this.abilities.length / this.abilitiesPerPage);
+    }
+
+    // Get the start index of the current page
+    getStartIndex() {
+        return this.currentPage * this.abilitiesPerPage;
+    }
+
+    // Get the end index of the current page
+    getEndIndex() {
+        const endIndex = (this.currentPage + 1) * this.abilitiesPerPage;
+        return endIndex > this.abilities.length ? this.abilities.length : endIndex;
+    }
+
 }

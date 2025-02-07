@@ -41,6 +41,7 @@
         &:not(.mat-expanded) {
             .mat-expansion-panel-header {
                 &:not([aria-disabled='true']) {
+
                     &.cdk-keyboard-focused,
                     &.cdk-program-focused,
                     &:hover {
@@ -156,7 +157,7 @@
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button,
 .mat-mdc-unelevated-button {
-    & > .mat-icon {
+    &>.mat-icon {
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
@@ -185,15 +186,13 @@
 .mat-mdc-unelevated-button,
 .mat-mdc-fab,
 .mat-mdc-mini-fab {
-    --mat-mdc-button-persistent-ripple-color: theme(
-        'colors.gray[400]'
-    ) !important;
+    --mat-mdc-button-persistent-ripple-color: theme('colors.gray[400]'
+        ) !important;
     --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
 
     .dark & {
-        --mat-mdc-button-persistent-ripple-color: theme(
-            'colors.black'
-        ) !important;
+        --mat-mdc-button-persistent-ripple-color: theme('colors.black'
+            ) !important;
         --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
     }
 
@@ -211,6 +210,7 @@
 .mat-mdc-icon-button,
 .mat-mdc-outlined-button {
     &:not([disabled='true']) {
+
         /* Apply primary color */
         &.mat-primary {
             .mat-icon {
@@ -236,6 +236,7 @@
 
 /* Adjust the border color of outlined buttons */
 .mat-mdc-outlined-button {
+
     /* Not disabled */
     &:not([disabled='true']) {
         @apply border-gray-300 dark:border-gray-500 #{'!important'};
@@ -262,7 +263,7 @@
     @apply space-x-1;
 
     &.mat-button-toggle-group-appearance-standard {
-        .mat-button-toggle + .mat-button-toggle {
+        .mat-button-toggle+.mat-button-toggle {
             background-clip: padding-box;
         }
     }
@@ -332,6 +333,7 @@
 
 /* "fill" appearance */
 .mat-mdc-form-field.mat-form-field-appearance-fill {
+
     /* Disabled */
     &.mat-form-field-disabled {
         opacity: 0.7 !important;
@@ -339,6 +341,7 @@
 
     /* Invalid */
     &.mat-form-field-invalid {
+
         /* Border color */
         .mat-mdc-text-field-wrapper {
             @apply border-warn dark:border-warn #{'!important'};
@@ -346,6 +349,7 @@
 
         /* Select */
         .mat-mdc-select {
+
             /* Placeholder color */
             .mat-mdc-select-placeholder {
                 @apply text-warn #{'!important'};
@@ -369,6 +373,7 @@
 
     /* Focused and valid fields */
     &.mat-focused:not(.mat-form-field-invalid) {
+
         /* Border color */
         .mat-mdc-text-field-wrapper {
             @apply border-primary dark:border-primary #{'!important'};
@@ -430,20 +435,20 @@
             .mat-mdc-form-field-text-prefix {
                 padding: 0 !important;
 
-                > .mat-icon {
+                >.mat-icon {
                     margin-right: 12px;
                     padding: 0 !important;
                 }
 
-                > .mat-mdc-icon-button {
+                >.mat-mdc-icon-button {
                     margin: 0 4px 0 -10px;
                 }
 
-                > .mat-mdc-select {
+                >.mat-mdc-select {
                     margin-right: 10px;
                 }
 
-                > .mat-datepicker-toggle {
+                >.mat-datepicker-toggle {
                     margin-left: -8px;
                 }
             }
@@ -452,20 +457,20 @@
             .mat-mdc-form-field-text-suffix {
                 padding: 0 !important;
 
-                > .mat-icon {
+                >.mat-icon {
                     margin-left: 12px;
                     padding: 0 !important;
                 }
 
-                > .mat-mdc-icon-button {
+                >.mat-mdc-icon-button {
                     margin: 0 -10px 0 4px;
                 }
 
-                > .mat-mdc-select {
+                >.mat-mdc-select {
                     margin-left: 10px;
                 }
 
-                > .mat-datepicker-toggle {
+                >.mat-datepicker-toggle {
                     margin-right: -8px;
                 }
             }
@@ -510,9 +515,7 @@
 
                             .mat-mdc-select-arrow-wrapper {
                                 .mat-mdc-select-arrow {
-                                    border-top-color: var(
-                                        --fuse-primary
-                                    ) !important;
+                                    border-top-color: var(--fuse-primary) !important;
                                 }
                             }
                         }
@@ -608,6 +611,7 @@
     &:has(textarea.mat-mdc-input-element) {
         .mat-mdc-text-field-wrapper {
             .mat-mdc-form-field-flex {
+
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix,
                 .mat-mdc-form-field-icon-suffix,
@@ -629,29 +633,28 @@
         &.fuse-mat-emphasized-affix {
             .mat-mdc-text-field-wrapper {
                 .mat-mdc-form-field-flex {
+
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix {
                         border-radius: 24px 0 0 24px;
 
-                        > .mat-icon {
+                        >.mat-icon {
                             margin-right: 12px;
                         }
 
-                        > .mat-mdc-icon-button {
+                        >.mat-mdc-icon-button {
                             margin: 0 2px 0 -10px !important;
                         }
 
-                        > .mat-mdc-select {
+                        >.mat-mdc-select {
                             margin-right: 8px;
                         }
 
-                        > .mat-datepicker-toggle {
+                        >.mat-datepicker-toggle {
                             margin-right: 4px;
                         }
 
-                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
-                                .mat-mdc-select
-                            ):not(.mat-datepicker-toggle) {
+                        >*:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                             margin-right: 12px;
                         }
                     }
@@ -660,25 +663,23 @@
                     .mat-mdc-form-field-text-suffix {
                         border-radius: 0 24px 24px 0;
 
-                        > .mat-icon {
+                        >.mat-icon {
                             margin-left: 12px !important;
                         }
 
-                        > .mat-mdc-icon-button {
+                        >.mat-mdc-icon-button {
                             margin: 0 -10px 0 2px !important;
                         }
 
-                        > .mat-mdc-select {
+                        >.mat-mdc-select {
                             margin-left: 12px !important;
                         }
 
-                        > .mat-datepicker-toggle {
+                        >.mat-datepicker-toggle {
                             margin-left: 4px !important;
                         }
 
-                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
-                                .mat-mdc-select
-                            ):not(.mat-datepicker-toggle) {
+                        >*:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                             margin-left: 12px !important;
                         }
                     }
@@ -691,6 +692,7 @@
     &.fuse-mat-dense {
         .mat-mdc-text-field-wrapper {
             .mat-mdc-form-field-flex {
+
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix,
                 .mat-mdc-form-field-icon-suffix,
@@ -705,7 +707,7 @@
 
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix {
-                    > .mat-mdc-icon-button {
+                    >.mat-mdc-icon-button {
                         margin-left: -6px;
                         margin-right: 12px;
                     }
@@ -713,7 +715,7 @@
 
                 .mat-mdc-form-field-icon-suffix,
                 .mat-mdc-form-field-text-suffix {
-                    > .mat-mdc-icon-button {
+                    >.mat-mdc-icon-button {
                         margin-left: 12px;
                         margin-right: -6px;
                     }
@@ -734,6 +736,7 @@
         &:has(textarea.mat-mdc-input-element) {
             .mat-mdc-text-field-wrapper {
                 .mat-mdc-form-field-flex {
+
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix,
                     .mat-mdc-form-field-icon-suffix,
@@ -754,6 +757,7 @@
             &.fuse-mat-emphasized-affix {
                 .mat-mdc-text-field-wrapper {
                     .mat-mdc-form-field-flex {
+
                         .mat-mdc-form-field-icon-prefix,
                         .mat-mdc-form-field-text-prefix {
                             border-radius: 20px 0 0 20px !important;
@@ -773,6 +777,7 @@
     &.fuse-mat-emphasized-affix {
         .mat-mdc-text-field-wrapper {
             .mat-mdc-form-field-flex {
+
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix {
                     align-self: stretch !important;
@@ -782,25 +787,23 @@
                     border-right-width: 1px;
                     border-style: solid;
 
-                    > .mat-icon {
+                    >.mat-icon {
                         margin-right: 16px;
                     }
 
-                    > .mat-mdc-icon-button {
+                    >.mat-mdc-icon-button {
                         margin: 0 6px 0 -10px !important;
                     }
 
-                    > .mat-mdc-select {
+                    >.mat-mdc-select {
                         margin-right: 12px !important;
                     }
 
-                    > .mat-datepicker-toggle {
+                    >.mat-datepicker-toggle {
                         margin-right: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
-                            .mat-mdc-select
-                        ):not(.mat-datepicker-toggle) {
+                    >*:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                         margin-right: 16px;
                     }
                 }
@@ -814,25 +817,23 @@
                     border-left-width: 1px;
                     border-style: solid;
 
-                    > .mat-icon {
+                    >.mat-icon {
                         margin-left: 16px;
                     }
 
-                    > .mat-mdc-icon-button {
+                    >.mat-mdc-icon-button {
                         margin: 0 -10px 0 6px !important;
                     }
 
-                    > .mat-mdc-select {
+                    >.mat-mdc-select {
                         margin: 0 -4px 0 16px !important;
                     }
 
-                    > .mat-datepicker-toggle {
+                    >.mat-datepicker-toggle {
                         margin-left: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
-                            .mat-mdc-select
-                        ):not(.mat-datepicker-toggle) {
+                    >*:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                         margin-left: 16px;
                     }
                 }
@@ -850,6 +851,7 @@
         &:has(textarea.mat-mdc-input-element) {
             .mat-mdc-text-field-wrapper {
                 .mat-mdc-form-field-flex {
+
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix,
                     .mat-mdc-form-field-icon-suffix,
@@ -871,8 +873,10 @@
 
 /* "outline" appearance */
 .mat-mdc-form-field.mat-form-field-appearance-outline {
+
     /* Invalid */
     &.mat-form-field-invalid {
+
         .mdc-notched-outline__leading,
         .mdc-notched-outline__notch,
         .mdc-notched-outline__trailing {
@@ -882,8 +886,10 @@
 
     /* Focused */
     &.mat-focused:not(.mat-form-field-invalid) {
+
         /* Primary */
         &.mat-primary {
+
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
@@ -893,6 +899,7 @@
 
         /* Accent */
         &.mat-accent {
+
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
@@ -905,6 +912,7 @@
         .mat-mdc-text-field-wrapper {
             .mat-mdc-form-field-flex {
                 .mdc-notched-outline {
+
                     .mdc-notched-outline__leading,
                     .mdc-notched-outline__notch,
                     .mdc-notched-outline__trailing {
@@ -976,6 +984,7 @@
 /* Invalid */
 .mat-form-field-invalid {
     .mat-mdc-input-element {
+
         /* Placeholder color */
         &::placeholder {
             @apply text-warn #{'!important'};
@@ -1093,7 +1102,7 @@
             .mat-mdc-select-value-text {
                 display: inline-flex;
 
-                > * {
+                >* {
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
@@ -1133,6 +1142,7 @@
 /*  @ Stepper
 /* -------------------------------------------------------------------------- */
 .mat-step-icon {
+
     /* Do not override the mat-icon color */
     .mat-icon {
         color: currentColor !important;
@@ -1157,6 +1167,7 @@
 /*  @ Tabs
 /* -------------------------------------------------------------------------- */
 .mat-mdc-tab-group {
+
     /* No header */
     &.fuse-mat-no-header {
         .mat-mdc-tab-header {
@@ -1198,6 +1209,7 @@ textarea.mat-mdc-input-element {
 /*  @ Toolbar
 /* -------------------------------------------------------------------------- */
 .mat-toolbar {
+
     /* Apply primary contrast color */
     &.mat-primary {
         .mat-icon {

@@ -1,6 +1,5 @@
 //Angular
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -33,8 +32,6 @@ import { AuthService } from 'app/core/auth/auth.service';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        RouterLink,
-
         FormsModule,
         ReactiveFormsModule,
 
@@ -48,7 +45,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 
         KeyboardComponent,
         AbilitiesComponent,
-        KeybindsDrawerComponent,
+        KeybindsDrawerComponent
     ],
 })
 export class KeybindsComponent implements OnInit {
@@ -154,6 +151,13 @@ export class KeybindsComponent implements OnInit {
         }
     }
 
+    updateKeybinding(update) {
+        console.log('updated keybinding?', update);
+        this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, update);
+        this.selectedKeybinding = this.keybindingService.getKeybindingById(this.selectedKeybinding.id);
+        console.log('this.selectedKeybinding', this.selectedKeybinding);
+    }
+
     saveKeybinding() {
         console.log('save keybinding');
     }
@@ -162,18 +166,19 @@ export class KeybindsComponent implements OnInit {
         console.log('share keybinding');
     }
 
-    updateKeybindings() {
-        const newKeybindings = [
-            { id: '1', name: 'Default', class: 'Paladin', keybinds: [{ key: 'Ctrl+C', action: 'Copy' }, { key: 'Ctrl+V', action: 'Paste' }] },
-            { id: '2', name: 'Editing', class: 'Mage', keybinds: [{ key: 'Ctrl+X', action: 'Cut' }, { key: 'Ctrl+Z', action: 'Undo' }] }
-        ];
-        this.keybindingService.updateKeybindings(newKeybindings);
-    }
+    // updateKeybindings() {
+    // const newKeybindings = [
+    //     { id: '1', name: 'Default', class: 'Paladin', keybinds: [{ key: 'Ctrl+C', spell: 'Copy' }, { key: 'Ctrl+V', spell: 'Paste' }] },
+    //     { id: '2', name: 'Editing', class: 'Mage', keybinds: [{ key: 'Ctrl+X', spell: 'Cut' }, { key: 'Ctrl+Z', spell: 'Undo' }] }
+    // ];
+    // this.keybindingService.updateKeybindings(newKeybindings);
+    // }
 
-    updateKeybindsInKeybinding() {
-        const updatedKeybinds = [{ key: 'Ctrl+P', action: 'Print' }];
-        this.keybindingService.updateKeybindsInKeybinding('Default', updatedKeybinds);
-    }
+    // updateKeybindsInKeybinding() {
+    //     const updatedKeybinds = [{ key: 'Ctrl+P', spell: 'Print' }];
+    //     this.keybindingService.updateKeybindsInKeybinding('Default', updatedKeybinds);
+
+    // }
 
     // onNameChange(newValue: string) {
     //     console.log('Updated Value:', newValue);

@@ -1,4 +1,12 @@
 export interface Keybind {
     key: string;
-    action: string;
+    spell: {
+        key: string,
+        description: string,
+        icon: string,
+        id: number
+        keybinding: string,
+        name: string,
+        spellId: number
+    }
 }

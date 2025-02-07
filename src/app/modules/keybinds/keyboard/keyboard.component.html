@@ -1,263 +1,73 @@
-<div class="flex justify-center items-center h-full">
-    <div class="p-5 bg-gray-800 rounded-lg shadow-lg">
-        <!-- Function Row -->
-        <div class="flex space-x-1 mb-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Esc</div>
-            <div class="flex space-x-1">
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F1</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F2</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F3</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F4</div>
+<div>
+    <div class="flex flex-row p-2 bg-gray-300">
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="resetZoom()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">Reset</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onZoomInClicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">ZoomIn</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onZoomOutClicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">ZoomOut</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onPanDown100Clicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">Up</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onPanUp100Clicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">Down</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onPanRight100Clicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">Left</span>
+        </button>
+        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="onPanLeft100Clicked()">
+            <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon> -->
+            <span class="ml-2">Right</span>
+        </button>
+    </div>
+    <div style="position: absolute; top: 350px; bottom: 0; left: 0; right: 0">
+        <ngx-panzoom #PanZoom [zoomLevels]="10" [scalePerZoomLevel]="scalePerZoomLevel()" [zoomStepDuration]="0.2"
+            [freeMouseWheelFactor]="0.01" [zoomToFitZoomLevelFactor]="0.9" [neutralZoomLevel]="neutralZoomLevel()"
+            [zoomOnMouseWheel]="zoomEnabled()" (modelChange)="panzoomModel.set($event)">
+            <div class="relative p-5 bg-gray-800 rounded-lg shadow-lg">
+                <!-- keyboard.component.html -->
+                <div>
+                    <!-- Loop through rows and keys -->
+                    <!-- <div *ngFor="let row of keyboardLayout" class="flex space-x-1 mb-1">
+                        <div *ngFor="let key of row" cdkDropList
+                            class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 {{ key.width }} rounded border border-gray-600 shadow-md transition-transform transform duration-300 ease-in-out hover:bg-gray-300"
+                            [ngClass]="{ 'bg-green-500': key.isHovered, 'bg-gray-700': !key.isHovered }">
+                            {{ key.label }}
+                        </div>
+                    </div> -->
+
+                    <div *ngFor="let row of keyboardLayout" class="flex space-x-1 mb-1">
+                        <div *ngFor="let key of row" cdkDropList
+                            class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 {{ key.width }} rounded border border-gray-600 shadow-md transition-transform transform duration-300 ease-in-out hover:bg-gray-300"
+                            [ngClass]="{ 'bg-green-500': key.keybinds?.length, 'bg-gray-700': !key.keybinds?.length }">
+                            {{ key.label }}
+
+                            <!-- Show up to 3 dots horizontally underneath the key if key has keybinds -->
+                            <div *ngIf="key.keybinds?.length" class="relative mt-1 flex justify-center">
+                                <!-- Loop through up to 3 keybindings and display dots horizontally -->
+                                <div *ngFor="let keybind of key.keybinds.slice(0, 3)"
+                                    class="w-2 h-2 bg-white rounded-full mx-1"></div>
+
+                                <!-- If there are more than 3 keybinds, show the plus sign -->
+                                <div *ngIf="key.keybinds?.length > 3"
+                                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-white text-sm">+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
-            <div class="flex space-x-1">
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F5</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F6</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F7</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F8</div>
-            </div>
-            <div class="flex space-x-1">
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F9</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F10</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F11</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    F12</div>
-            </div>
-        </div>
-
-        <!-- Number Row -->
-        <div class="flex space-x-1 mb-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ~</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                1</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                2</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                3</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                4</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                5</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                6</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                7</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                8</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                9</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                0</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                -</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                =</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-24 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Backspace</div>
-        </div>
-
-        <!-- QWERTY Row -->
-        <div class="flex space-x-1 mb-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Tab</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Q</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                W</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                E</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                R</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                T</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Y</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                U</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                I</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                O</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                P</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                [</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ]</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                |\</div>
-        </div>
-
-        <!-- ASDF Row -->
-        <div class="flex space-x-1 mb-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-20 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Caps Lock</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                A</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                S</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                D</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                F</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                G</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                H</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                J</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                K</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                L</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ;</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                '</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-24 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Enter</div>
-        </div>
-
-        <!-- ZXCV Row -->
-        <div class="flex space-x-1 mb-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-24 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Shift</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Z</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                X</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                C</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                V</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                B</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                N</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                M</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ,</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                .</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-12 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                /</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-32 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Shift</div>
-        </div>
-
-        <!-- Bottom Row -->
-        <div class="flex space-x-1">
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Ctrl</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Fn</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Alt</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-64 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Space</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Alt</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                Ctrl</div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ◄</div>
-            <div class="flex flex-col space-y-1">
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    ▲</div>
-                <div
-                    class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                    ▼</div>
-            </div>
-            <div
-                class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 w-16 rounded border border-gray-600 shadow-md hover:bg-gray-600">
-                ►</div>
-        </div>
+        </ngx-panzoom>
     </div>
 </div>
