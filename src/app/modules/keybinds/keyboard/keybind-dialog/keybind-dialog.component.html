@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Keybinds for {{label}}</h2>
+<mat-dialog-content>
+    <div class="py-4">
+        <div *ngFor="let bind of keybinds" class="mb-4">
+            <div class="flex items-center gap-3 mb-2">
+                <img [src]="bind.spell?.icon" class="w-8 h-8" [alt]="bind.spell?.name">
+                <div>
+                    <div class="font-medium">{{bind.key}}</div>
+                    <div class="font-semibold">{{bind.spell?.name}}</div>
+                </div>
+            </div>
+            <div class="text-gray-600">{{bind.spell?.description}}</div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

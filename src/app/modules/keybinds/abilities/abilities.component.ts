@@ -121,10 +121,10 @@ export class AbilitiesComponent implements OnInit {
                     this.selectedKeybinding.heroTalent = undefined;
                     this.selectedKeybindingSpec = undefined;
                     this.selectedKeybindingHeroTalent = undefined;
-                    console.log('this.selectedKeybindingSpec', this.selectedKeybindingSpec);
                     this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { class: selectedOption, heroTalent: null, spec: null });
+                    this.selectedKeybinding.keybinds = [];
+                    this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, { addedKeybinds: [], removedKeybinds: [] });
                     this.specs = Object.keys(fullClasses[this.selectedKeybindingClass].specs);
-                    console.log('this.specs', this.specs);
                     this.selectionClassChanged.emit(null);
                     this.abilities = [];
                 } else {

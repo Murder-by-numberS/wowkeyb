@@ -47,8 +47,9 @@
 
                     <div *ngFor="let row of keyboardLayout" class="flex space-x-1 mb-1">
                         <div *ngFor="let key of row" cdkDropList
-                            class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 {{ key.width }} rounded border border-gray-600 shadow-md transition-transform transform duration-300 ease-in-out hover:bg-gray-300"
-                            [ngClass]="{ 'bg-green-500': key.keybinds?.length, 'bg-gray-700': !key.keybinds?.length }">
+                            class="bg-gray-700 text-white font-semibold flex justify-center items-center h-12 {{ key.width }} rounded border border-gray-600 shadow-md transition-transform transform duration-300 ease-in-out hover:bg-gray-300 cursor-pointer"
+                            [ngClass]="{ 'bg-green-500': key.keybinds?.length, 'bg-gray-700': !key.keybinds?.length, 'cursor-default': !key.keybinds?.length }"
+                            (click)="key.keybinds?.length && openKeybindDialog(key)">
                             {{ key.label }}
 
                             <!-- Show up to 3 dots horizontally underneath the key if key has keybinds -->
