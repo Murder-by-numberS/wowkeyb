@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, viewChild, Input, signal, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 
 import { NgxPanZoomModule, PanZoomComponent, PanZoomModel } from 'ngx-panzoom';
 
@@ -10,6 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { Keybinding } from 'app/core/types/keybinding';
+import { KeybindDialogComponent } from './keybind-dialog/keybind-dialog.component';
 
 interface Key {
     label: string;
@@ -30,6 +32,7 @@ interface Key {
         MatIconModule,
         MatMenuModule,
         MatSidenavModule,
+        MatDialogModule,
 
         NgxPanZoomModule
     ],
@@ -103,7 +106,7 @@ export class KeyboardComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor() { }
+    constructor(private dialog: MatDialog) { }
 
     ngOnInit(): void {
 
@@ -157,10 +160,13 @@ export class KeyboardComponent implements OnInit {
         return this.canZoom;
     }
 
-    // Methods to handle hover state
-    expandKey(key: Key): void {
-        console.log('expand key', key);
-        key.isHovered = true;
+    private calculateDialogWidth(keybindsCount: number): string {
+        // Base width for 1-2 keybinds
+        const baseWidth = 300;
+        // Add 50px for each additional keybind beyond 2
+        const extraWidth = Math.max(0, keybindsCount - 2) * 50;
+        // Cap the maximum width at 600px
+        return `${Math.min(baseWidth + extraWidth, 600)}px`;
     }
 
     collapseKey(key: Key): void {
@@ -211,6 +217,27 @@ export class KeyboardComponent implements OnInit {
         });
     }
 
+    openKeybindDialog(key: any): void {
+        console.log('opening key', key);
+        if (key.keybinds.length > 0) {
+            const dialogWidth = this.calculateDialogWidth(key.keybinds.length);
+            this.dialog.open(KeybindDialogComponent, {
+                data: { key: key },
+                width: dialogWidth
+            });
+        }
+    }
 
-
+    /**
+     * Public method that can be called by parent components to reset the keyboard
+     * Clears all keybindings and hover states
+     */
+    public resetKeyboard(): void {
+        this.keyboardLayout.forEach(row => {
+            row.forEach(keyItem => {
+                keyItem.keybinds = [];
+                keyItem.isHovered = false;
+            });
+        });
+    }
 }

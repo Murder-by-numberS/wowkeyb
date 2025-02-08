@@ -52,6 +52,7 @@ export class KeybindsComponent implements OnInit {
 
     @ViewChild(KeybindsDrawerComponent) keybindsDrawerComponent: KeybindsDrawerComponent;
     @ViewChild(AbilitiesComponent) abilitiesComponent: AbilitiesComponent;
+    @ViewChild(KeyboardComponent) keyboard: KeyboardComponent;
 
     isAuthenticated: boolean;
 
@@ -149,6 +150,10 @@ export class KeybindsComponent implements OnInit {
         if (this.abilitiesComponent) {
             this.abilitiesComponent.abilities = [];
         }
+        console.log('After Refresh - this.selectedKeybinding', this.selectedKeybinding);
+        this.keybindingService.clearKeybinds(this.selectedKeybinding.id);
+        console.log('is this the one?', this.selectedKeybinding);
+        this.keyboard.resetKeyboard();
     }
 
     updateKeybinding(update) {

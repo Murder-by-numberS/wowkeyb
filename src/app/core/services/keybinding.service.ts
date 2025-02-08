@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Keybinding } from '../types/keybinding';
 import { Keybind } from '../types/keybind';
@@ -79,9 +79,11 @@ export class KeybindingService {
 
     updateKeybinding(id: string, updatedKeybinding: Partial<Keybinding>) {
         const currentKeybindings = this.keybindingsSource.getValue();
+        console.log('these are the currentKeybindings', currentKeybindings);
         const updatedKeybindings = currentKeybindings.map(kb =>
             kb.id === id ? { ...kb, ...updatedKeybinding } : kb
         );
+        console.log('We need to check updatedKeybindings', updatedKeybindings);
         this.keybindingsSource.next(updatedKeybindings);
     }
 
@@ -91,6 +93,14 @@ export class KeybindingService {
             kb.id === id ? { ...kb, name } : kb
         );
 
+        this.keybindingsSource.next(updatedKeybindings);
+    }
+
+    clearKeybinds(keybindingId: string) {
+        const currentKeybindings = this.keybindingsSource.getValue();
+        const updatedKeybindings = currentKeybindings.map(kb =>
+            kb.id === keybindingId ? { ...kb, keybinds: [] } : kb
+        );
         this.keybindingsSource.next(updatedKeybindings);
     }
 }
