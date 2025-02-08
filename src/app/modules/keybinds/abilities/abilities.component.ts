@@ -173,6 +173,9 @@ export class AbilitiesComponent implements OnInit {
                     this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { heroTalent: selectedOption });
                     this.heroTalents = fullClasses[this.selectedKeybindingClass].specs[this.selectedKeybindingSpec]
                     console.log('this.heroTalents', this.heroTalents);
+                    this.selectedKeybinding.keybinds = [];
+                    this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, { addedKeybinds: [], removedKeybinds: [] });
+                    this.selectionClassChanged.emit(null);
                     this.abilities = [];
                 } else {
                     console.log('Selection cancelled', this.selectedKeybinding.class);
@@ -214,6 +217,9 @@ export class AbilitiesComponent implements OnInit {
                     // this.specs = fullClasses[this.selectedKeybindingClass]
                     // console.log('this.specs');
                     this.fetchAbilities();
+                    this.selectedKeybinding.keybinds = [];
+                    this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, { addedKeybinds: [], removedKeybinds: [] });
+                    this.selectionClassChanged.emit(null);
                 } else {
                     console.log('Selection cancelled', this.selectedKeybinding.class);
                     this.selectedKeybindingClass = this.selectedKeybinding.class;
