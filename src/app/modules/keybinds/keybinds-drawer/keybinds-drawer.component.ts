@@ -1,6 +1,5 @@
 //Angular
 import { Component, ViewEncapsulation, OnInit, signal, ViewChild, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 
@@ -33,7 +32,6 @@ import { random } from 'lodash';
     standalone: true,
     imports: [
         NgClass,
-        RouterLink,
         FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
