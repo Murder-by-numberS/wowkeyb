@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, viewChild, Input, signal, SimpleChanges } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, viewChild, Input, signal, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 
@@ -12,6 +12,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { Keybinding } from 'app/core/types/keybinding';
 import { KeybindDialogComponent } from './keybind-dialog/keybind-dialog.component';
+import { KeybindingService } from 'app/core/services/keybinding.service';
 
 interface Key {
     label: string;
@@ -41,6 +42,8 @@ export class KeyboardComponent implements OnInit {
 
     @Input()
     selectedKeybinding: Keybinding;
+
+    @Output() refreshKeybindings = new EventEmitter<void>();
 
     readonly panZoom = viewChild(PanZoomComponent);
     readonly panzoomModel = signal<PanZoomModel>(undefined!);
@@ -106,7 +109,10 @@ export class KeyboardComponent implements OnInit {
     /**
      * Constructor
      */
-    constructor(private dialog: MatDialog) { }
+    constructor(
+        private dialog: MatDialog,
+        private keybindingService: KeybindingService
+    ) { }
 
     ngOnInit(): void {
 
@@ -218,12 +224,30 @@ export class KeyboardComponent implements OnInit {
     }
 
     openKeybindDialog(key: any): void {
-        console.log('opening key', key);
-        if (key.keybinds.length > 0) {
+        if (key.keybinds?.length > 0) {
             const dialogWidth = this.calculateDialogWidth(key.keybinds.length);
-            this.dialog.open(KeybindDialogComponent, {
+            const dialogRef = this.dialog.open(KeybindDialogComponent, {
                 data: { key: key },
                 width: dialogWidth
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    console.log('Dialog result:', result);
+                    key.keybinds = result;
+                    // Update the selectedKeybinding's keybinds
+                    this.selectedKeybinding.keybinds = this.selectedKeybinding.keybinds
+                        .filter(k => k.key !== key.label);
+                    // Add the remaining keybinds back
+                    result.forEach(keybind => {
+                        this.selectedKeybinding.keybinds.push(keybind);
+                    });
+                    //update the keybinding in the keybindingService
+                    this.keybindingService.updateKeybinding(this.selectedKeybinding.id, this.selectedKeybinding);
+                    console.log('this.selectedKeybinding', this.selectedKeybinding);
+                    //call the parent component keybinds.refreshChildKeybindings
+                    this.refreshKeybindings.emit();
+                }
             });
         }
     }
@@ -240,4 +264,5 @@ export class KeyboardComponent implements OnInit {
             });
         });
     }
+
 }

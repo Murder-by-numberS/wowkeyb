@@ -149,6 +149,7 @@ export class KeybindsComponent implements OnInit {
         }
         if (this.abilitiesComponent) {
             this.abilitiesComponent.abilities = [];
+            this.abilitiesComponent.fetchAbilities();
         }
         console.log('After Refresh - this.selectedKeybinding', this.selectedKeybinding);
         this.keybindingService.clearKeybinds(this.selectedKeybinding.id);
