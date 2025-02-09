@@ -170,10 +170,11 @@ export class AbilitiesComponent implements OnInit {
                     this.selectedKeybindingSpec = selectedOption;
                     this.selectedKeybinding.spec = this.selectedKeybindingSpec;
                     this.selectedKeybindingHeroTalent = undefined;
-                    this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { heroTalent: selectedOption });
+                    this.keybindingService.updateKeybinding(this.selectedKeybinding.id, { heroTalent: undefined });
                     this.heroTalents = fullClasses[this.selectedKeybindingClass].specs[this.selectedKeybindingSpec]
                     console.log('this.heroTalents', this.heroTalents);
                     this.selectedKeybinding.keybinds = [];
+                    this.selectedKeybinding.heroTalent = undefined;
                     this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, { addedKeybinds: [], removedKeybinds: [] });
                     this.selectionClassChanged.emit(null);
                     this.abilities = [];
@@ -197,7 +198,7 @@ export class AbilitiesComponent implements OnInit {
     onHeroTalentChange(event: any) {
 
         const selectedOption = event.value;
-
+        console.log('has heroTalent - this.selectedKeybinding.heroTalent', this.selectedKeybinding.heroTalent);
         if (this.selectedKeybinding.heroTalent) {
 
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
