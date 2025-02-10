@@ -105,6 +105,7 @@ export class KeyboardComponent implements OnInit {
         ]
     ];
 
+    private keyMap: Map<string, Key> = new Map();
 
     /**
      * Constructor
@@ -115,9 +116,16 @@ export class KeyboardComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-
+        this.initializeKeyMap();
     }
 
+    private initializeKeyMap(): void {
+        this.keyboardLayout.forEach(row => {
+            row.forEach(keyItem => {
+                this.keyMap.set(keyItem.label.toUpperCase(), keyItem);
+            });
+        });
+    }
 
     scalePerZoomLevel() {
         return 2.0;
@@ -197,6 +205,7 @@ export class KeyboardComponent implements OnInit {
 
         // Only add new keybindings if we have a selected keybinding
         if (this.selectedKeybinding?.keybinds) {
+            console.log('updateKeyboardBindings - this.selectedKeybinding has keybinds');
             this.selectedKeybinding.keybinds.forEach(keybind => {
                 this.addKeybinding(keybind);
             });
@@ -205,22 +214,25 @@ export class KeyboardComponent implements OnInit {
 
     addKeybinding(keybind) {
         const { key, spell } = keybind;
-
         const keyParts = key.toLowerCase().split('+');
+        const mainKey = keyParts[keyParts.length - 1].toUpperCase();
 
-        const mainKey = keyParts[keyParts.length - 1].toUpperCase(); // Convert to uppercase for matching
-
-        // Find and update the matching key
+        // Find the key in the keyboard layout directly
         this.keyboardLayout.forEach(row => {
             row.forEach(keyItem => {
                 if (keyItem.label.toUpperCase() === mainKey) {
+                    // Initialize keybinds if undefined
                     if (!keyItem.keybinds) {
                         keyItem.keybinds = [];
                     }
+                    // Add new keybind
                     keyItem.keybinds.push({ key, spell });
+                    // Update the keyMap as well
+                    this.keyMap.set(mainKey, keyItem);
                 }
             });
         });
+        console.log('addKeybinding - this.keyboardLayout', this.keyboardLayout);
     }
 
     openKeybindDialog(key: any): void {
@@ -244,8 +256,8 @@ export class KeyboardComponent implements OnInit {
                     });
                     //update the keybinding in the keybindingService
                     this.keybindingService.updateKeybinding(this.selectedKeybinding.id, this.selectedKeybinding);
-                    console.log('this.selectedKeybinding', this.selectedKeybinding);
-                    //call the parent component keybinds.refreshChildKeybindings
+                    console.log('after keybind-dialog - this.selectedKeybinding', this.selectedKeybinding);
+                    this.updateKeyboardBindings();
                     this.refreshKeybindings.emit();
                 }
             });
@@ -257,6 +269,7 @@ export class KeyboardComponent implements OnInit {
      * Clears all keybindings and hover states
      */
     public resetKeyboard(): void {
+        console.log('reseting keyboard');
         this.keyboardLayout.forEach(row => {
             row.forEach(keyItem => {
                 keyItem.keybinds = [];

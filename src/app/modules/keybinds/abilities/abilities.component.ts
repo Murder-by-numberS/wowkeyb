@@ -242,12 +242,14 @@ export class AbilitiesComponent implements OnInit {
     fetchAbilities() {
         console.log('fetching abilities for class', this.selectedKeybindingClass);
 
-        // this.abilities = this.abilitiesService.getAbilities(this.selectedKeybindingClass)
-        this.abilitiesService.getAbilities(this.selectedKeybindingClass, this.selectedKeybindingSpec, this.selectedKeybindingHeroTalent)
-            .subscribe((data) => { this.abilities = data; },
-                (err) => {
-                    console.log('getAbilities - err', err);
-                });
+        if (this.selectedKeybindingClass, this.selectedKeybindingSpec, this.selectedKeybindingHeroTalent) {
+            // this.abilities = this.abilitiesService.getAbilities(this.selectedKeybindingClass)
+            this.abilitiesService.getAbilities(this.selectedKeybindingClass, this.selectedKeybindingSpec, this.selectedKeybindingHeroTalent)
+                .subscribe((data) => { this.abilities = data; },
+                    (err) => {
+                        console.log('getAbilities - err', err);
+                    });
+        }
     }
 
     selectKey(ability: Ability) {
