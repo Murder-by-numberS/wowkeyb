@@ -151,10 +151,12 @@ export class KeybindsComponent implements OnInit {
             this.abilitiesComponent.abilities = [];
             this.abilitiesComponent.fetchAbilities();
         }
-        console.log('After Refresh - this.selectedKeybinding', this.selectedKeybinding);
         this.keybindingService.clearKeybinds(this.selectedKeybinding.id);
-        console.log('is this the one?', this.selectedKeybinding);
-        this.keyboard.resetKeyboard();
+
+        if (!this.selectedKeybinding.spec || !this.selectedKeybinding.heroTalent) {
+            console.log('reseting keyboard')
+            this.keyboard.resetKeyboard();
+        }
     }
 
     updateKeybinding(update) {
