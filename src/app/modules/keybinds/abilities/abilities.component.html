@@ -34,8 +34,6 @@
         </mat-form-field>
     </div>
     }
-
-    {{selectedKeybindingHeroTalent}}
     @if (selectedKeybinding && selectedKeybindingClass && selectedKeybindingSpec) {
     <div class="flex-col px-2">
         <mat-form-field appearance="fill" class="w-48">
@@ -49,14 +47,6 @@
         </mat-form-field>
     </div>
     }
-
-    <div class="flex-col px-2">
-        <div class="text-sm text-gray-600">
-            Debug Info:
-            <div>Selected: {{selectedKeybindingHeroTalent | json}}</div>
-            <div>Available: {{heroTalents | json}}</div>
-        </div>
-    </div>
 </div>
 <div class="pl-4 pb-2 flex flex-row w-full max-h-6 min-h-6 items-center">
     <p class="">Abilities</p>
