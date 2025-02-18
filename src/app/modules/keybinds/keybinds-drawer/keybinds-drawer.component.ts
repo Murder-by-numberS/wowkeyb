@@ -54,7 +54,7 @@ export class KeybindsDrawerComponent implements OnInit {
 
     keybindings: Keybinding[];
     filteredKeybindings: Keybinding[];
-    selectedKeybindId: string | null = null; // To keep track of the selected keybind
+    selectedKeybindingId: string | null = null; // To keep track of the selected keybind
     @Output() keybindingSelected = new EventEmitter<any>();
     MAX_SIZE = 10;
 
@@ -112,12 +112,12 @@ export class KeybindsDrawerComponent implements OnInit {
         this.applyFilter();
     }
 
-    selectKeybinding(keybind: any): void {
-        console.log('keybind selected', keybind);
+    selectKeybinding(keybinding: any): void {
+        console.log('keybinding selected', keybinding);
 
-        this.selectedKeybindId = keybind.id;
-        console.log('emitting', keybind)
-        this.keybindingSelected.emit(keybind);
+        this.selectedKeybindingId = keybinding.keybinding_id;
+        console.log('emitting', keybinding)
+        this.keybindingSelected.emit(keybinding);
     }
 
     closeAccordion() {
@@ -138,16 +138,25 @@ export class KeybindsDrawerComponent implements OnInit {
 
     }
 
-    isSelected(keybindId: string): boolean {
-        return this.selectedKeybindId === keybindId;
+    isSelected(keybindingId: string): boolean {
+        return this.selectedKeybindingId === keybindingId;
     }
 
     createKeybinding() {
-        const newKeybinding = { id: '3', name: 'New Keybinding', class: 'Warrior', keybinds: [] };
-        this.keybindingService.addKeybinding(newKeybinding);
-
-        this.selectedKeybindId = newKeybinding.id;
-        this.keybindingSelected.emit(newKeybinding);
+        this.keybindingService.createKeybinding().subscribe({
+            next: (createdKeybinding) => {
+                console.log('Keybinding created:', createdKeybinding);
+                // Update selected keybinding and emit it
+                this.selectedKeybindingId = createdKeybinding.keybinding_id;
+                console.log('selectedKeybindingId', this.selectedKeybindingId);
+                this.keybindingSelected.emit(createdKeybinding);
+                this.loadKeybindings();
+            },
+            error: (error) => {
+                console.error('Error creating keybinding:', error);
+                // Handle error appropriately (e.g., show error message to user)
+            }
+        });
     }
 
     applyFilter() {
@@ -156,9 +165,9 @@ export class KeybindsDrawerComponent implements OnInit {
             console.log('applying filter');
             this.filteredKeybindings = this.keybindings.filter(keybinding => this.selectedClasses.value.includes(keybinding.class));
             console.log('this.filteredKeybindings', this.filteredKeybindings);
-            if (!this.filteredKeybindings.some(keybinding => keybinding.id === this.selectedKeybindId)) {
-                console.log('applying filter - selectedKeybindId', this.selectedKeybindId);
-                this.selectedKeybindId = null;
+            if (!this.filteredKeybindings.some(keybinding => keybinding.keybinding_id === this.selectedKeybindingId)) {
+                console.log('applying filter - selectedKeybindingId', this.selectedKeybindingId);
+                this.selectedKeybindingId = null;
                 this.keybindingSelected.emit(null);
             }
         } else {

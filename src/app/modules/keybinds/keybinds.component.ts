@@ -132,7 +132,7 @@ export class KeybindsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 console.log('deleting keybinding', this.selectedKeybinding);
-                this.keybindingService.removeKeybinding(this.selectedKeybinding.id);
+                this.keybindingService.removeKeybinding(this.selectedKeybinding.keybinding_id);
                 this.selectedKeybinding = null;
                 this.keybindingSelected = false;
                 this.refreshChildKeybindings();
@@ -151,7 +151,7 @@ export class KeybindsComponent implements OnInit {
             this.abilitiesComponent.abilities = [];
             this.abilitiesComponent.fetchAbilities();
         }
-        this.keybindingService.clearKeybinds(this.selectedKeybinding.id);
+        this.keybindingService.clearKeybinds(this.selectedKeybinding.keybinding_id);
 
         if (!this.selectedKeybinding.spec || !this.selectedKeybinding.heroTalent) {
             console.log('reseting keyboard')
@@ -162,7 +162,7 @@ export class KeybindsComponent implements OnInit {
     updateKeybinding(update) {
         console.log('updated keybinding?', update);
         this.keybindingService.updateKeybindsInKeybinding(this.selectedKeybinding.name, update);
-        this.selectedKeybinding = this.keybindingService.getKeybindingById(this.selectedKeybinding.id);
+        this.selectedKeybinding = this.keybindingService.getKeybindingById(this.selectedKeybinding.keybinding_id);
         console.log('this.selectedKeybinding', this.selectedKeybinding);
     }
 
@@ -190,7 +190,7 @@ export class KeybindsComponent implements OnInit {
 
     // onNameChange(newValue: string) {
     //     console.log('Updated Value:', newValue);
-    //     this.keybindingService.updateKeybindingName(this.selectedKeybinding.id, newValue);
+    //     this.keybindingService.updateKeybindingName(this.selectedKeybinding.keybinding_id, newValue);
     // }
 
     editName() {
@@ -203,7 +203,7 @@ export class KeybindsComponent implements OnInit {
             console.log('Form Submitted', this.nameForm.value);
             this.selectedKeybindingName = this.nameForm.value.name;
             this.selectedKeybinding.name = this.selectedKeybindingName;
-            this.keybindingService.updateKeybindingName(this.selectedKeybinding.id, this.nameForm.value.name);
+            this.keybindingService.updateKeybindingName(this.selectedKeybinding.keybinding_id, this.nameForm.value.name);
         } else {
             console.log('Form is invalid');
         }

@@ -57,19 +57,19 @@
     <!-- Row -->
     @for (keybinding of filteredKeybindings; track keybinding) {
     <div [ngClass]="{
-        'bg-blue-500 text-white': isSelected(keybinding.id),
-        'bg-gray-200 text-black': !isSelected(keybinding.id)
-      }" class="flex flex-0 max-h-16 min-h-12 items-center px-4 cursor-pointer" (click)="selectKeybinding(keybinding)">
+        'bg-blue-500 text-white': isSelected(keybinding.keybinding_id),
+        'bg-gray-200 text-black': !isSelected(keybinding.keybinding_id)
+    }" class="flex flex-0 max-h-16 min-h-12 items-center px-4 cursor-pointer" (click)="selectKeybinding(keybinding)">
         <p>{{keybinding.name}} - {{keybinding.class}}</p>
     </div>
     }
 
     <!-- Last Row until max 100 has reached -->
     @if (keybindings.length < MAX_SIZE) { <div class="flex flex-0 max-h-16 min-h-12 items-center justify-center">
-        <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'" (click)="createKeybinding()">
+        <button type="button" class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'"
+            (click)="createKeybinding()">
             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus'"></mat-icon>
             <span class="ml-2">Create Keybinding</span>
         </button>
 </div>
 }
-</div>

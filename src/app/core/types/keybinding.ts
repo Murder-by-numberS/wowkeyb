@@ -1,7 +1,7 @@
 import { Keybind } from "./keybind";
 
 export interface Keybinding {
-    id: string,
+    keybinding_id: string,
     name: string;
     class: string; //TODO: ENUM
     spec?: string; //TODO: ENUM
