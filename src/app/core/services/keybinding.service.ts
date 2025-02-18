@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+
+import { environment } from 'environments/environment';
 
 import { Keybinding } from '../types/keybinding';
 import { Keybind } from '../types/keybind';
@@ -16,9 +20,11 @@ export class KeybindingService {
     private keybindingsSource = new BehaviorSubject<Keybinding[]>([]);
     currentKeybindings = this.keybindingsSource.asObservable();
 
+    constructor(private http: HttpClient) { }
+
     getKeybindingById(id: string): Keybinding | undefined {
         const currentKeybindings = this.keybindingsSource.getValue();
-        return currentKeybindings.find(kb => kb.id === id);
+        return currentKeybindings.find(kb => kb.keybinding_id === id);
     }
 
     updateKeybindings(keybindings: Keybinding[]) {
@@ -32,7 +38,7 @@ export class KeybindingService {
 
     removeKeybinding(id: string) {
         const currentKeybindings = this.keybindingsSource.getValue();
-        this.keybindingsSource.next(currentKeybindings.filter(kb => kb.id !== id));
+        this.keybindingsSource.next(currentKeybindings.filter(kb => kb.keybinding_id !== id));
     }
 
     hasKeybindKey(keybindingId: string, key: string): boolean {
@@ -81,7 +87,7 @@ export class KeybindingService {
         const currentKeybindings = this.keybindingsSource.getValue();
         console.log('these are the currentKeybindings', currentKeybindings);
         const updatedKeybindings = currentKeybindings.map(kb =>
-            kb.id === id ? { ...kb, ...updatedKeybinding } : kb
+            kb.keybinding_id === id ? { ...kb, ...updatedKeybinding } : kb
         );
         console.log('We need to check updatedKeybindings', updatedKeybindings);
         this.keybindingsSource.next(updatedKeybindings);
@@ -90,7 +96,7 @@ export class KeybindingService {
     updateKeybindingName(id: string, name: string) {
         const currentKeybindings = this.keybindingsSource.getValue();
         const updatedKeybindings = currentKeybindings.map(kb =>
-            kb.id === id ? { ...kb, name } : kb
+            kb.keybinding_id === id ? { ...kb, name } : kb
         );
 
         this.keybindingsSource.next(updatedKeybindings);
@@ -99,8 +105,19 @@ export class KeybindingService {
     clearKeybinds(keybindingId: string) {
         const currentKeybindings = this.keybindingsSource.getValue();
         const updatedKeybindings = currentKeybindings.map(kb =>
-            kb.id === keybindingId ? { ...kb, keybinds: [] } : kb
+            kb.keybinding_id === keybindingId ? { ...kb, keybinds: [] } : kb
         );
         this.keybindingsSource.next(updatedKeybindings);
+    }
+
+    createKeybinding(): Observable<Keybinding> {
+        console.log('creating keybinding');
+        return this.http.post<Keybinding>(`${environment.apiUrl}/keybindings`, {}).pipe(
+            tap((newKeybinding: Keybinding) => {
+                console.log('after created - newKeybinding', newKeybinding);
+                const currentKeybindings = this.keybindingsSource.getValue();
+                this.keybindingsSource.next([...currentKeybindings, newKeybinding]);
+            })
+        );
     }
 }
