@@ -120,4 +120,20 @@ export class KeybindingService {
             })
         );
     }
+
+    getKeybindings(): Observable<Keybinding[]> {
+        console.log('getting keybindings');
+        return this.http.get<Keybinding[]>(`${environment.apiUrl}/keybindings`).pipe(
+            tap((keybindings: Keybinding[]) => {
+                console.log('getKeybindings - keybindings', keybindings);
+                this.keybindingsSource.next(keybindings);
+                localStorage.setItem('keybindings', JSON.stringify(keybindings));
+            })
+        );
+    }
+
+    clearKeybindings() {
+        this.keybindingsSource.next([]);
+        localStorage.removeItem('keybindings');
+    }
 }

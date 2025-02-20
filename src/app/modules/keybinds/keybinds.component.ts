@@ -79,7 +79,9 @@ export class KeybindsComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _authService: AuthService,
         private dialog: MatDialog) {
+
         this.keybindingSelected = false;
+
     }
 
     ngOnInit(): void {
@@ -101,6 +103,17 @@ export class KeybindsComponent implements OnInit {
     // refreshChildKeybindings() {
     //     this.refresh = !this.refresh; // Toggle the value to trigger ngOnChanges in the child
     // }
+
+    getKeybindings(authenticated: boolean = false) {
+        //check local storage for keybindings
+        const keybindings = localStorage.getItem('keybindings');
+        if (keybindings) {
+            this.keybindingService.updateKeybindings(JSON.parse(keybindings));
+            if (this.keybindsDrawerComponent) {
+                this.keybindsDrawerComponent.loadKeybindings();
+            }
+        }
+    }
 
     onKeybindingSelected(keybinding: any) {
         console.log('onKeybindingSelected', keybinding)

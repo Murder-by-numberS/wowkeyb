@@ -6,12 +6,14 @@ import { environment } from '../../../environments/environment';
 
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { KeybindingService } from 'app/core/services/keybinding.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private _keybindingService = inject(KeybindingService);
     private apiUrl: string;
 
     // -----------------------------------------------------------------------------------------------------
@@ -141,6 +143,9 @@ export class AuthService {
 
         // Set the authenticated flag to false
         this._authenticated = false;
+
+        //call keybinding service to clear keybindings
+        this._keybindingService.clearKeybindings();
 
         // Return the observable
         return of(true);
