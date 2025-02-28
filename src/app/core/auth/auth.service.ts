@@ -6,12 +6,14 @@ import { environment } from '../../../environments/environment';
 
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { KeybindingService } from 'app/core/services/keybinding.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private _keybindingService = inject(KeybindingService);
     private apiUrl: string;
 
     // -----------------------------------------------------------------------------------------------------
@@ -94,6 +96,9 @@ export class AuthService {
                 // // Store the user on the user service
                 this._userService.user = response.user;
 
+                //set response.user.keybindings to local storage
+                localStorage.setItem('keybindings', JSON.stringify(response.keybindings));
+
                 // Return a new observable with the response
                 return of(response);
             })
@@ -104,6 +109,10 @@ export class AuthService {
      * Sign in using the access token
      */
     signInUsingToken(): Observable<any> {
+        // Add check for token existence
+        if (!this.accessToken) {
+            return of(false);
+        }
 
         // Sign in using the token
         return this._httpClient
@@ -111,11 +120,16 @@ export class AuthService {
                 accessToken: this.accessToken,
             })
             .pipe(
-                catchError(() =>
-                    // Return false
-                    of(false)
-                ),
+                catchError((error) => {
+                    // Clear everything on error
+                    this.signOut().subscribe();
+                    return of(false);
+                }),
                 switchMap((response: any) => {
+                    if (!response) {
+                        return of(false);
+                    }
+
                     // Store the access token in the local storage
                     this.accessToken = response.token;
 
@@ -124,6 +138,11 @@ export class AuthService {
 
                     // Store the user on the user service
                     this._userService.user = response.user;
+
+                    // Set keybindings
+                    if (response.keybindings) {
+                        localStorage.setItem('keybindings', JSON.stringify(response.keybindings));
+                    }
 
                     // Return true
                     return of(true);
@@ -135,12 +154,18 @@ export class AuthService {
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('currentUser');
+        // Clear all auth-related storage
+        localStorage.clear();  // This will clear all localStorage items
+        // OR if you want to be more specific:
+        // localStorage.removeItem('accessToken');
+        // localStorage.removeItem('currentUser');
+        // localStorage.removeItem('keybindings');
 
         // Set the authenticated flag to false
         this._authenticated = false;
+
+        // Clear keybindings
+        this._keybindingService.clearKeybindings();
 
         // Return the observable
         return of(true);

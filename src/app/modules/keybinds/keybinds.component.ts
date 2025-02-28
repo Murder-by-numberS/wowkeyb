@@ -79,7 +79,9 @@ export class KeybindsComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _authService: AuthService,
         private dialog: MatDialog) {
+
         this.keybindingSelected = false;
+
     }
 
     ngOnInit(): void {
@@ -101,6 +103,17 @@ export class KeybindsComponent implements OnInit {
     // refreshChildKeybindings() {
     //     this.refresh = !this.refresh; // Toggle the value to trigger ngOnChanges in the child
     // }
+
+    getKeybindings(authenticated: boolean = false) {
+        //check local storage for keybindings
+        const keybindings = localStorage.getItem('keybindings');
+        if (keybindings) {
+            this.keybindingService.updateKeybindings(JSON.parse(keybindings));
+            if (this.keybindsDrawerComponent) {
+                this.keybindsDrawerComponent.loadKeybindings();
+            }
+        }
+    }
 
     onKeybindingSelected(keybinding: any) {
         console.log('onKeybindingSelected', keybinding)
@@ -144,19 +157,24 @@ export class KeybindsComponent implements OnInit {
 
     refreshChildKeybindings() {
         console.log('refreshChildKeybindings');
-        if (this.keybindsDrawerComponent) {
-            this.keybindsDrawerComponent.loadKeybindings();
-        }
-        if (this.abilitiesComponent) {
-            this.abilitiesComponent.abilities = [];
-            this.abilitiesComponent.fetchAbilities();
-        }
-        this.keybindingService.clearKeybinds(this.selectedKeybinding.keybinding_id);
 
-        if (!this.selectedKeybinding.spec || !this.selectedKeybinding.heroTalent) {
-            console.log('reseting keyboard')
-            this.keyboard.resetKeyboard();
-        }
+        //refetch the keybindings from server
+        this.keybindingService.getKeybindings().subscribe((keybindings) => {
+            console.log('refreshChildKeybindings - keybindings', keybindings);
+            if (this.keybindsDrawerComponent) {
+                this.keybindsDrawerComponent.loadKeybindings();
+            }
+            // if (this.abilitiesComponent) {
+            //     this.abilitiesComponent.abilities = [];
+            //     this.abilitiesComponent.fetchAbilities();
+            // }
+
+            if (!this.selectedKeybinding.spec || !this.selectedKeybinding.heroTalent) {
+                console.log('reseting keyboard')
+                this.keyboard.resetKeyboard();
+            }
+        });
+
     }
 
     updateKeybinding(update) {
@@ -203,14 +221,21 @@ export class KeybindsComponent implements OnInit {
             console.log('Form Submitted', this.nameForm.value);
             this.selectedKeybindingName = this.nameForm.value.name;
             this.selectedKeybinding.name = this.selectedKeybindingName;
-            this.keybindingService.updateKeybindingName(this.selectedKeybinding.keybinding_id, this.nameForm.value.name);
+            this.keybindingService.updateKeybinding(this.selectedKeybinding.keybinding_id, { name: this.nameForm.value.name }).subscribe({
+                next: (updatedKeybinding) => {
+                    console.log('updatedKeybinding', updatedKeybinding);
+                    this.editingName = false;
+
+                    console.log('this.selectedKeybindingName', this.selectedKeybindingName)
+                },
+                error: (error) => {
+                    console.error('Error updating keybinding:', error);
+                }
+            });
         } else {
             console.log('Form is invalid');
         }
 
-        this.editingName = false;
-
-        console.log('this.selectedKeybindingName', this.selectedKeybindingName)
     }
 
     cancelName() {

@@ -20,6 +20,10 @@ export class KeybindingService {
     private keybindingsSource = new BehaviorSubject<Keybinding[]>([]);
     currentKeybindings = this.keybindingsSource.asObservable();
 
+    get currentKeybindingsValue(): Keybinding[] {
+        return this.keybindingsSource.getValue();
+    }
+
     constructor(private http: HttpClient) { }
 
     getKeybindingById(id: string): Keybinding | undefined {
@@ -37,8 +41,12 @@ export class KeybindingService {
     }
 
     removeKeybinding(id: string) {
-        const currentKeybindings = this.keybindingsSource.getValue();
-        this.keybindingsSource.next(currentKeybindings.filter(kb => kb.keybinding_id !== id));
+        this.http.delete(`${environment.apiUrl}/keybindings/${id}`).subscribe(() => {
+
+        }, (error) => {
+            console.error('Error deleting keybinding:', error);
+        });
+
     }
 
     hasKeybindKey(keybindingId: string, key: string): boolean {
@@ -83,14 +91,18 @@ export class KeybindingService {
         this.keybindingsSource.next(updatedKeybindings);
     }
 
-    updateKeybinding(id: string, updatedKeybinding: Partial<Keybinding>) {
-        const currentKeybindings = this.keybindingsSource.getValue();
-        console.log('these are the currentKeybindings', currentKeybindings);
-        const updatedKeybindings = currentKeybindings.map(kb =>
-            kb.keybinding_id === id ? { ...kb, ...updatedKeybinding } : kb
-        );
-        console.log('We need to check updatedKeybindings', updatedKeybindings);
-        this.keybindingsSource.next(updatedKeybindings);
+    updateKeybinding(id: string, updatedKeybinding: Partial<Keybinding>): Observable<Keybinding> {
+        return this.http.put<Keybinding>(`${environment.apiUrl}/keybindings/${id}`, updatedKeybinding)
+            .pipe(
+                tap((updatedKeybinding: Keybinding) => {
+                    const currentKeybindings = this.keybindingsSource.getValue();
+                    const updatedKeybindings = currentKeybindings.map(kb =>
+                        kb.keybinding_id === id ? updatedKeybinding : kb
+                    );
+                    this.keybindingsSource.next(updatedKeybindings);
+                    localStorage.setItem('keybindings', JSON.stringify(updatedKeybindings));
+                })
+            );
     }
 
     updateKeybindingName(id: string, name: string) {
@@ -102,13 +114,13 @@ export class KeybindingService {
         this.keybindingsSource.next(updatedKeybindings);
     }
 
-    clearKeybinds(keybindingId: string) {
-        const currentKeybindings = this.keybindingsSource.getValue();
-        const updatedKeybindings = currentKeybindings.map(kb =>
-            kb.keybinding_id === keybindingId ? { ...kb, keybinds: [] } : kb
-        );
-        this.keybindingsSource.next(updatedKeybindings);
-    }
+    // clearKeybinds(keybindingId: string) {
+    //     const currentKeybindings = this.keybindingsSource.getValue();
+    //     const updatedKeybindings = currentKeybindings.map(kb =>
+    //         kb.keybinding_id === keybindingId ? { ...kb, keybinds: [] } : kb
+    //     );
+    //     this.keybindingsSource.next(updatedKeybindings);
+    // }
 
     createKeybinding(): Observable<Keybinding> {
         console.log('creating keybinding');
@@ -117,7 +129,30 @@ export class KeybindingService {
                 console.log('after created - newKeybinding', newKeybinding);
                 const currentKeybindings = this.keybindingsSource.getValue();
                 this.keybindingsSource.next([...currentKeybindings, newKeybinding]);
+                //debug this.keybindingsSource
+                console.log('this.keybindingsSource', this.keybindingsSource.getValue());
+                localStorage.setItem('keybindings', JSON.stringify([...currentKeybindings, newKeybinding]));
             })
         );
     }
+
+    getKeybindings(): Observable<Keybinding[]> {
+        console.log('getting keybindings');
+        return this.http.get<Keybinding[]>(`${environment.apiUrl}/keybindings`).pipe(
+            tap((keybindings: Keybinding[]) => {
+                console.log('getKeybindings - keybindings', keybindings);
+                this.keybindingsSource.next(keybindings);
+                console.log('getKeybindings - this.keybindingsSource', this.keybindingsSource.getValue());
+                localStorage.setItem('keybindings', JSON.stringify(keybindings));
+
+            })
+        );
+    }
+
+    clearKeybindings() {
+        this.keybindingsSource.next([]);
+        localStorage.removeItem('keybindings');
+    }
+
+
 }

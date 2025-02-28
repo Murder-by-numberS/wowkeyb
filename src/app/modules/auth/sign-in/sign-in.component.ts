@@ -22,6 +22,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from 'app/core/auth/auth.service';
 import { BackendService } from 'app/core/services/backend.service';
+import { KeybindingService } from 'app/core/services/keybinding.service';
 
 @Component({
     selector: 'auth-sign-in',
@@ -64,6 +65,7 @@ export class AuthSignInComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _backendService: BackendService,
         private _fuseConfigService: FuseConfigService,
+        private _keybindingService: KeybindingService,
         private _router: Router
     ) { }
 
@@ -119,6 +121,15 @@ export class AuthSignInComponent implements OnInit {
             (response) => {
                 this.setScheme(response.userSettings.scheme);
                 this._backendService.startPing();
+
+                //call keybinding service to get keybindings
+                this._keybindingService.getKeybindings()
+                    .pipe(takeUntil(this._unsubscribeAll))
+                    .subscribe((keybindings) => {
+                        //store keybindings in local storage
+                        localStorage.setItem('keybindings', JSON.stringify(keybindings));
+                    });
+
                 // Set the redirect url.
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via
