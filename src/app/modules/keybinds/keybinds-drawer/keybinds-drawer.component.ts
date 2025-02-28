@@ -72,42 +72,31 @@ export class KeybindsDrawerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         this.loadKeybindings();
         this.filteredKeybindings = this.keybindings;
-        // //fetch keybindings for user if logged in
 
-        // if (this.keybindings && this.keybindings.length > 0) {
-        //     this.selectedKeybindId = this.keybindings[0]['keybind_id'];
-        //     this.keybindSelected.emit(this.keybindings[0]);
-        // }
+        const savedKeybindings = localStorage.getItem('keybindings');
+        if (savedKeybindings) {
+            try {
+                const parsedKeybindings = JSON.parse(savedKeybindings);
+                this.keybindings = parsedKeybindings;
+                // Update the KeybindingService with the saved keybindings
+                this.keybindingService.updateKeybindings(parsedKeybindings);
+                this.applyFilter();
 
+                // Set the first keybinding as selected and emit it
+                if (parsedKeybindings.length > 0) {
+                    this.selectedKeybindingId = parsedKeybindings[0].keybinding_id;
+                    this.keybindingSelected.emit(parsedKeybindings[0]);
+                }
+            } catch (error) {
+                console.error('Failed to parse keybindings from localStorage:', error);
+            }
+        }
     }
 
-    // createKeybinding(): void {
-    //     console.log('creating keybinding');
-
-    // if (this.keybindings.length <= this.MAX_SIZE) {
-
-    //     //call API
-    //     const newKeybind = {
-    //         name: 'new keybinding',
-    //         keybind_id: random(10).toString()
-    //     }
-    //     this.keybindings.push(newKeybind);
-
-    //     this.selectedKeybindId = newKeybind.keybind_id;
-    //     this.keybindSelected.emit(newKeybind);
-    // }
-    // }
-
-    // ngOnChanges(changes: SimpleChanges) {
-    //     if (changes['refreshKeybindings'] && changes['refreshKeybindings'].currentValue) {
-    //         this.loadKeybindings();
-    //     }
-    // }
-
     loadKeybindings() {
+        console.log('KeybindsDrawerComponent - loadKeybindings');
         this.keybindingService.currentKeybindings.subscribe(keybindings => this.keybindings = keybindings);
         this.applyFilter();
     }
@@ -172,7 +161,17 @@ export class KeybindsDrawerComponent implements OnInit {
             }
         } else {
             this.filteredKeybindings = this.keybindings;
-        }
-    }
 
+            // Use getValue() to get the current value from the BehaviorSubject
+            if (!this.keybindingService.currentKeybindingsValue.some(keybinding =>
+                keybinding.keybinding_id === this.selectedKeybindingId)) {
+                console.log('applying filter - selectedKeybindingId', this.selectedKeybindingId);
+                if (this.filteredKeybindings.length > 0) {
+                    this.selectedKeybindingId = this.filteredKeybindings[0].keybinding_id;
+                    this.keybindingSelected.emit(this.filteredKeybindings[0]);
+                }
+            }
+        }
+
+    }
 }
