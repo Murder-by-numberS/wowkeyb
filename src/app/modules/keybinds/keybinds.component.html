@@ -19,14 +19,14 @@
                             <span class="ml-2">Delete</span>
                         </button>
 
-                        <div matTooltip="You must be logged in to save." [matTooltipDisabled]="isAuthenticated"
+                        <!-- <div matTooltip="You must be logged in to save." [matTooltipDisabled]="isAuthenticated"
                             aria-label="Div with dynamic tooltip">
                             <button class="ml-3 hidden sm:inline-flex" mat-stroked-button
                                 [disabled]="!keybindingSelected || !isAuthenticated" (click)="saveKeybinding()">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog-8-tooth'"></mat-icon>
                                 <span class="ml-2">Save</span>
                             </button>
-                        </div>
+                        </div> -->
 
                         <button class="ml-3 hidden sm:inline-flex" mat-flat-button [color]="'primary'"
                             [disabled]="!keybindingSelected" (click)="shareKeybinding()">

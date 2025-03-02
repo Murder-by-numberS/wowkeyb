@@ -221,6 +221,11 @@ export class AuthService {
 
         // Check the access token expire date
         if (AuthUtils.isTokenExpired(this.accessToken)) {
+            // Clear all localStorage when token is expired
+            localStorage.clear();
+            this._authenticated = false;
+            this._keybindingService.clearKeybindings();
+
             return of(false);
         }
 

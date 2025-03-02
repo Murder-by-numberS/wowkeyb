@@ -184,9 +184,9 @@ export class KeybindsComponent implements OnInit {
         console.log('this.selectedKeybinding', this.selectedKeybinding);
     }
 
-    saveKeybinding() {
-        console.log('save keybinding');
-    }
+    // saveKeybinding() {
+    //     console.log('save keybinding');
+    // }
 
     shareKeybinding() {
         console.log('share keybinding');
