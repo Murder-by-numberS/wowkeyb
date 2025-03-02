@@ -61,23 +61,35 @@ export class BackendService {
 
     stopPing(): void {
         console.log('stopping ping');
-        this.pinger = null;
+        if (this.pinger) {
+            clearInterval(this.pinger);
+            this.pinger = null;
+        }
     }
 
     //runs every 30 seconds
     backendPinger(): void {
         console.log('pinging backend');
-        this.ping()
-            .subscribe((health) => {
-                console.log('backend pinger', health);
-
+        this.ping().subscribe({
+            next: (health) => {
                 this._authService.check().subscribe((authenticated) => {
+                    console.log('Auth Check Result:', {
+                        authenticated,
+                        timestamp: new Date().toISOString()
+                    });
                     if (!authenticated) {
                         this._router.navigate(['/sign-out']);
                     }
                 });
+            },
+            error: (error) => {
 
-            });
+                this._authService.signOut().subscribe(() => {
+                    console.log('Signing out and routing to home');
+                    this._router.navigate(['/sign-out']);
+                });
+            }
+        });
     }
 
 }
